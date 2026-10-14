@@ -1,3 +1,5 @@
+import type { SourceRef } from "../domain/provenance"
+
 export type ErPersonSlot = "1s" | "2s" | "3s" | "plural"
 
 type ConceptBase = {
@@ -10,6 +12,10 @@ type ConceptBase = {
    * but excluded from the scheduler's mixed-session pool.
    */
   schedulable?: boolean
+  /** Phase 2: owning chapter in the content taxonomy. */
+  chapterId?: string
+  /** Phase 2: provenance of this concept's pedagogical content. */
+  source?: SourceRef
 }
 
 export type TranslateConcept = ConceptBase & {

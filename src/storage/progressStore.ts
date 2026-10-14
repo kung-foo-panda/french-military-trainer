@@ -1,57 +1,27 @@
-import {
-  createInitialConceptState,
-  type ConceptState,
-} from "../types/conceptState"
-
-/** New key so old SM-2 localStorage payloads are ignored. */
-const KEY = "french_trainer_concept_states"
-
-function isConceptState(value: unknown): value is ConceptState {
-  if (typeof value !== "object" || value === null) return false
-
-  const s = value as Partial<ConceptState>
-  return (
-    typeof s.id === "string" &&
-    typeof s.strength === "number" &&
-    typeof s.stability === "number" &&
-    typeof s.failureCount === "number" &&
-    typeof s.lastReviewed === "number" &&
-    typeof s.nextReview === "number"
-  )
-}
+import { progressRepository } from "../data"
+import { createInitialConceptState, type ConceptState } from "../types/conceptState"
 
 export function loadConceptStates(): ConceptState[] {
-  if (typeof window === "undefined") return []
-
-  const raw = localStorage.getItem(KEY)
-  if (!raw) return []
-
-  try {
-    const parsed: unknown = JSON.parse(raw)
-    if (!Array.isArray(parsed)) return []
-    return parsed.filter(isConceptState)
-  } catch {
-    return []
-  }
+  return progressRepository()?.loadConceptStates() ?? []
 }
 
 export function saveConceptStates(states: ConceptState[]) {
-  if (typeof window === "undefined") return
-  localStorage.setItem(KEY, JSON.stringify(states))
+  progressRepository()?.saveConceptStates(states)
 }
 
-/** Ensure every grammar concept id has a ConceptState (seed missing). */
-export function ensureConceptStates(
+/**
+ * Merge stored states with seeds for every concept id that has none yet.
+ * Existing states are kept in order — including orphaned ids no longer in the
+ * pool — so unknown state is never silently discarded.
+ */
+export function mergeConceptStates(
   existing: ConceptState[],
   conceptIds: string[]
 ): ConceptState[] {
-  const map = new Map(existing.map((s) => [s.id, s]))
+  const have = new Set(existing.map((s) => s.id))
+  const seeds = conceptIds
+    .filter((id) => !have.has(id))
+    .map(createInitialConceptState)
 
-  for (const id of conceptIds) {
-    if (!map.has(id)) {
-      map.set(id, createInitialConceptState(id))
-    }
-  }
-
-  return conceptIds.map((id) => map.get(id)!)
+  return [...existing, ...seeds]
 }

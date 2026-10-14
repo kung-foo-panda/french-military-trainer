@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { schedulableConceptIds } from "@/grammar/concepts"
-import { ensureConceptStates, loadConceptStates } from "@/storage/progressStore"
+import { loadConceptStates, mergeConceptStates } from "@/storage/progressStore"
 import { loadEnforcementRecord } from "@/storage/enforcementStore"
 import { loadDailyMetrics } from "@/storage/dailyMetricsStore"
 import { dateKey, type EnforcementRecord } from "@/core/dailyEnforcement"
@@ -28,7 +28,7 @@ export default function DevPage() {
 
   function load() {
     const today = dateKey(new Date())
-    const states = ensureConceptStates(
+    const states = mergeConceptStates(
       loadConceptStates(),
       schedulableConceptIds
     )

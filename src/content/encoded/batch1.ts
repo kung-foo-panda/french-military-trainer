@@ -3,7 +3,8 @@ import type { EncodedChapter } from "../../ai/encodedConcept"
 /**
  * Day 25 — reviewed AI encoding batch (Ch 4 "More irregular verbs" + Phase-1
  * backfill). Produced via the Day 24 pipeline, validated, then integrated on
- * Day 26. Not yet schedulable until generators + evaluators exist.
+ * Day 26. Moved under src/content/ in Phase 2 so the domain catalog can
+ * reconcile it with the runtime concept pool.
  */
 export const encodedBatch1: EncodedChapter = {
   chapter: 4,

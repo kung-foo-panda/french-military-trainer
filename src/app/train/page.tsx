@@ -25,12 +25,15 @@ import {
   type SessionMetric,
 } from "@/core/dailyMetrics"
 import {
-  ensureConceptStates,
   loadConceptStates,
+  mergeConceptStates,
   saveConceptStates,
 } from "@/storage/progressStore"
 import { concepts, schedulableConceptIds } from "@/grammar/concepts"
-import type { ConceptState } from "@/types/conceptState"
+import {
+  createInitialConceptState,
+  type ConceptState,
+} from "@/types/conceptState"
 import type { Question } from "@/types/question"
 import { Card } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
@@ -45,7 +48,7 @@ function bootstrap() {
   const enforcement = resolveDailyPlan(loadEnforcementRecord(), today)
   saveEnforcementRecord(enforcement)
 
-  const states = ensureConceptStates(
+  const states = mergeConceptStates(
     loadConceptStates(),
     schedulableConceptIds
   )
@@ -132,7 +135,7 @@ export default function TrainPage() {
     const plan = resolveDailyPlan(enforcement, today)
     saveEnforcementRecord(plan)
 
-    const seeded = ensureConceptStates(states, schedulableConceptIds)
+    const seeded = mergeConceptStates(states, schedulableConceptIds)
     const remaining = Math.max(1, plan.targetToday - plan.completedToday)
     const fresh = createSessionState(remaining)
     const planned = planNextQuestion(seeded, 0, null)
@@ -181,9 +184,7 @@ export default function TrainPage() {
 
     const idx = states.findIndex((s) => s.id === question.conceptId)
     const existing =
-      idx >= 0
-        ? states[idx]
-        : ensureConceptStates([], [question.conceptId])[0]
+      idx >= 0 ? states[idx] : createInitialConceptState(question.conceptId)
 
     const { state: updatedState, reinsert } = updateStrength(
       existing,
