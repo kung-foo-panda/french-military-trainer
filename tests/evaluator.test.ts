@@ -124,10 +124,32 @@ test("mixed_tense reuses the passé composé classifier", () => {
   )
 })
 
-test("futur_proche has no classifier → wrong_answer", () => {
+test("futur_proche without metadata → wrong_answer", () => {
   assert.equal(
     evaluateAnswer("je vais mang\u00e9", ["je vais parler"], {
       mode: "futur_proche",
+    }).errorType,
+    "wrong_answer"
+  )
+})
+
+test("futur_proche: wrong aller form → auxiliary_error", () => {
+  assert.equal(
+    evaluateAnswer("je va parler", ["je vais parler"], {
+      mode: "futur_proche",
+      auxiliary: "vais",
+      infinitive: "parler",
+    }).errorType,
+    "auxiliary_error"
+  )
+})
+
+test("futur_proche: wrong infinitive → wrong_answer", () => {
+  assert.equal(
+    evaluateAnswer("je vais mang\u00e9", ["je vais parler"], {
+      mode: "futur_proche",
+      auxiliary: "vais",
+      infinitive: "parler",
     }).errorType,
     "wrong_answer"
   )
@@ -161,6 +183,19 @@ test("negation: missing ne/pas → negation_error", () => {
   assert.equal(
     evaluateAnswer("nous avons parl\u00e9", ["nous n'avons pas parl\u00e9"], NEGATION)
       .errorType,
+    "negation_error"
+  )
+})
+
+test("negation: 'je' elision still extracts the auxiliary verb", () => {
+  assert.equal(
+    evaluateAnswer("je ai pas parl\u00e9", ["je n'ai pas parl\u00e9"], {
+      mode: "negation",
+      infinitive: "parler",
+      subject: "je",
+      auxiliary: "j'ai",
+      participle: "parl\u00e9",
+    }).errorType,
     "negation_error"
   )
 })
@@ -208,5 +243,15 @@ test("auxiliary mode: any miss → auxiliary_error", () => {
     evaluateAnswer("avoir", ["\u00eatre"], { mode: "auxiliary", auxiliary: "\u00eatre" })
       .errorType,
     "auxiliary_error"
+  )
+})
+
+test("auxiliary mode: an unrelated answer → wrong_answer", () => {
+  assert.equal(
+    evaluateAnswer("peut-\u00eatre", ["\u00eatre"], {
+      mode: "auxiliary",
+      auxiliary: "\u00eatre",
+    }).errorType,
+    "wrong_answer"
   )
 })

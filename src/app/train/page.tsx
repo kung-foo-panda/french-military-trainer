@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { planNextQuestion } from "@/core/sessionEngine"
+import { type TrainingPlan } from "@/core/trainingPlan"
 import { evaluateAnswer } from "@/core/answerEvaluator"
 import { explainPhrase, type PhraseExplanation } from "@/core/grammarExplainer"
 import { updateStrength } from "@/core/strengthUpdate"
@@ -29,6 +30,10 @@ import {
   mergeConceptStates,
   saveConceptStates,
 } from "@/storage/progressStore"
+import {
+  loadTrainingPlan,
+  saveTrainingPlan,
+} from "@/storage/trainingPlanStore"
 import { concepts, schedulableConceptIds } from "@/grammar/concepts"
 import {
   createInitialConceptState,
@@ -40,6 +45,7 @@ import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Stat } from "@/components/ui/Stat"
+import { TrainingPlanPicker } from "@/components/TrainingPlanPicker"
 
 type ConceptStat = { name: string; correct: number; total: number }
 
@@ -52,7 +58,8 @@ function bootstrap() {
     loadConceptStates(),
     schedulableConceptIds
   )
-  const planned = planNextQuestion(states, 0, null)
+  const plan = loadTrainingPlan()
+  const planned = planNextQuestion(states, 0, null, plan)
   const remaining = Math.max(
     1,
     enforcement.targetToday - enforcement.completedToday
@@ -64,6 +71,7 @@ function bootstrap() {
     session: createSessionState(remaining),
     enforcement,
     metrics: loadDailyMetrics(today),
+    plan,
   }
 }
 
@@ -90,6 +98,7 @@ export default function TrainPage() {
   const [weakness, setWeakness] = useState(boot.weakness)
   const [enforcement, setEnforcement] = useState(boot.enforcement)
   const [dailyMetrics, setDailyMetrics] = useState(boot.metrics)
+  const [plan, setPlan] = useState<TrainingPlan>(boot.plan)
   const [conceptStats, setConceptStats] = useState<
     Record<string, ConceptStat>
   >({})
@@ -130,20 +139,20 @@ export default function TrainPage() {
 
   const stressReport = computeStressReport(dailyMetrics)
 
-  function startNewSession() {
+  function startNewSession(activePlan: TrainingPlan = plan) {
     const today = dateKey(new Date())
-    const plan = resolveDailyPlan(enforcement, today)
-    saveEnforcementRecord(plan)
+    const planRecord = resolveDailyPlan(enforcement, today)
+    saveEnforcementRecord(planRecord)
 
     const seeded = mergeConceptStates(states, schedulableConceptIds)
-    const remaining = Math.max(1, plan.targetToday - plan.completedToday)
+    const remaining = Math.max(1, planRecord.targetToday - planRecord.completedToday)
     const fresh = createSessionState(remaining)
-    const planned = planNextQuestion(seeded, 0, null)
+    const planned = planNextQuestion(seeded, 0, null, activePlan)
     const startedAt = new Date().getTime()
     setSessionStartAt(startedAt)
     setLiveNow(startedAt)
     setConceptStats({})
-    setEnforcement(plan)
+    setEnforcement(planRecord)
     setSession(fresh)
     setStates(seeded)
     setQuestion(planned.question)
@@ -153,6 +162,12 @@ export default function TrainPage() {
     setLastCorrect(null)
     setExplanation([])
     setLastReinsert(false)
+  }
+
+  function changePlan(next: TrainingPlan) {
+    setPlan(next)
+    saveTrainingPlan(next)
+    startNewSession(next)
   }
 
   function checkAnswer(provided?: string) {
@@ -267,7 +282,8 @@ export default function TrainPage() {
     const planned = planNextQuestion(
       nextStates,
       completed,
-      nextSession.forceConceptId
+      nextSession.forceConceptId,
+      plan
     )
     setQuestion(planned.question)
     setWeakness(planned.weakness)
@@ -296,6 +312,10 @@ export default function TrainPage() {
           )}
         </div>
       </header>
+
+      <Card>
+        <TrainingPlanPicker plan={plan} onChange={changePlan} />
+      </Card>
 
       <Card>
         <ProgressBar
@@ -487,7 +507,7 @@ export default function TrainPage() {
             </p>
           )}
 
-          <Button onClick={startNewSession}>Start new session</Button>
+          <Button onClick={() => startNewSession()}>Start new session</Button>
         </Card>
       )}
     </div>

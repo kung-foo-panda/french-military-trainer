@@ -22,5 +22,6 @@ export function generateFuturProcheQuestion(
     mode: "futur_proche",
     subject: aller.subject,
     infinitive,
+    auxiliary: aller.form,
   }
 }

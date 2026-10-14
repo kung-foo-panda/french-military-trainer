@@ -4,12 +4,16 @@ import { evaluatePasseCompose } from "./modes/passeCompose"
 import { evaluateNegation } from "./modes/negation"
 import { evaluateEtrePc } from "./modes/etrePc"
 import { evaluateAuxiliary } from "./modes/auxiliary"
+import { evaluateFuturProche } from "./modes/futurProche"
 import { evaluateParticiple } from "./modes/participle"
 import type { EvaluationResult, EvalMeta, ModeEvaluator } from "./types"
 
 export type { ErrorType, EvaluationResult, EvalMeta } from "./types"
 
-/** Order preserves the pre-refactor branch order exactly. */
+/**
+ * Order preserves the pre-refactor branch order exactly; the Phase 4
+ * futur-proche classifier is appended since no earlier mode claims it.
+ */
 const MODE_EVALUATORS: ModeEvaluator[] = [
   evaluateConjugate,
   evaluatePasseCompose,
@@ -17,6 +21,7 @@ const MODE_EVALUATORS: ModeEvaluator[] = [
   evaluateEtrePc,
   evaluateAuxiliary,
   evaluateParticiple,
+  evaluateFuturProche,
 ]
 
 /**

@@ -5,6 +5,11 @@ import { isMastered } from "./escalation"
 import { escalateQuestion } from "./escalationGenerator"
 import { selectNextConceptState } from "./scheduler"
 import { isWeaknessSlot, weakestConceptId } from "./weakness"
+import {
+  DEFAULT_TRAINING_PLAN,
+  resolveTrainingPool,
+  type TrainingPlan,
+} from "./trainingPlan"
 import type { Concept } from "../types/concept"
 import type { ConceptState } from "../types/conceptState"
 import type { Question } from "../types/question"
@@ -45,18 +50,33 @@ function conceptById(id: string): Concept {
 }
 
 /**
+ * Phase 4 — the schedulable states a plan permits. Falls back to the full
+ * schedulable pool when a plan narrows to nothing, so training is never
+ * impossible (a contradictory plan degrades to "everything").
+ */
+function planPool(states: ConceptState[], plan: TrainingPlan): ConceptState[] {
+  const allowed = new Set(resolveTrainingPool(plan))
+  const pool = states.filter((s) => allowed.has(s.id))
+  return pool.length > 0
+    ? pool
+    : states.filter((s) => SCHEDULABLE_IDS.has(s.id))
+}
+
+/**
  * Pick next drill using extreme scheduler, or forced reinsert id.
- * Only schedulable concepts (Day 12) enter the mixed-session pool.
+ * Only schedulable concepts (Day 12) enter the mixed-session pool; a training
+ * plan (Phase 4) may further restrict it by chapter / concept / exercise type.
  */
 export function selectNextConcept(
   states: ConceptState[],
-  forceConceptId: string | null = null
+  forceConceptId: string | null = null,
+  plan: TrainingPlan = DEFAULT_TRAINING_PLAN
 ): Concept {
   if (forceConceptId) {
     return conceptById(forceConceptId)
   }
 
-  const pool = states.filter((s) => SCHEDULABLE_IDS.has(s.id))
+  const pool = planPool(states, plan)
   const next = selectNextConceptState(pool)
   return conceptById(next.id)
 }
@@ -71,7 +91,8 @@ export function selectNextConcept(
 export function planNextQuestion(
   states: ConceptState[],
   questionIndex: number,
-  forceConceptId: string | null = null
+  forceConceptId: string | null = null,
+  plan: TrainingPlan = DEFAULT_TRAINING_PLAN
 ): PlannedQuestion {
   if (forceConceptId) {
     return {
@@ -80,7 +101,7 @@ export function planNextQuestion(
     }
   }
 
-  const pool = states.filter((s) => SCHEDULABLE_IDS.has(s.id))
+  const pool = planPool(states, plan)
   const weakId = weakestConceptId(pool)
 
   if (weakId && isWeaknessSlot(questionIndex)) {
