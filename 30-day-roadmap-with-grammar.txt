@@ -1,0 +1,479 @@
+Excellent.
+
+Now we stop theorizing and turn this into a **disciplined 30-day execution plan**.
+
+This roadmap combines:
+
+* ✅ Minimal brutal architecture
+* ✅ The 20 concrete concepts
+* ✅ Extreme repetition algorithm
+* ✅ AI-assisted grammar encoding
+* ✅ Progressive expansion
+
+No fluff. No side quests.
+
+You execute this like a training program.
+
+---
+
+# 🔥 30-DAY EXTREME MILITARY ROADMAP
+
+(Web MVP – Minimal Brutal Version)
+
+---
+
+# WEEK 1 — Build the Combat Engine Core
+
+**Goal:** Fully working adaptive drill engine using C1–C8.
+
+---
+
+## DAY 1 — Project Foundation
+
+* Setup Next.js (TypeScript)
+* Create folder structure:
+
+```
+/core
+/grammar
+/app
+```
+
+* Create empty concept model
+* Hardcode 5 dummy concepts
+
+Deliverable:
+App runs. Concept array exists.
+
+---
+
+## DAY 2 — Core Data Structures
+
+Implement:
+
+```ts
+Concept
+Session
+EvaluationResult
+```
+
+Add:
+
+* strength
+* stability
+* failureCount
+* nextReview
+
+No UI logic yet.
+
+Deliverable:
+Type system stable.
+
+---
+
+## DAY 3 — Scheduler (Extreme Version)
+
+Implement:
+
+* Sort by:
+
+  1. Overdue
+  2. Lowest strength
+  3. Highest failureCount
+* Select next concept
+* Session length = 25
+
+Deliverable:
+Console-based selection works.
+
+---
+
+## DAY 4 — Strength Update Logic
+
+Implement aggressive model:
+
+Correct:
+
+* +5 strength
+* +1 stability
+
+Wrong:
+
+* -20 strength
+* stability = 1
+* failureCount++
+
+If strength < 40:
+→ reinsert same session
+
+Deliverable:
+Strength evolves correctly.
+
+---
+
+## DAY 5 — Implement C5–C8 (-ER Verbs)
+
+Concepts:
+
+* present_er_1s
+* present_er_2s
+* present_er_3s
+* present_er_plural
+
+Build:
+
+* ER verb list (10 verbs)
+* Generator: random subject + verb
+* Evaluator: check ending
+
+Deliverable:
+You can train ER verbs infinitely.
+
+---
+
+## DAY 6 — Error Classification
+
+Detect:
+
+* Wrong ending
+* Wrong stem
+* Completely wrong
+
+Return structured error type.
+
+Deliverable:
+Error metadata exists.
+
+---
+
+## DAY 7 — First Full Brutal Session
+
+Do 50 exercises manually.
+
+Log:
+
+* Weakest endings
+* Repetition frequency
+* Any logical flaws
+
+End of Week 1:
+You have a functioning ER military trainer.
+
+---
+
+# WEEK 2 — Build Auxiliary + Passé Composé Core
+
+---
+
+## DAY 8 — Implement C12 + C13 (être & avoir)
+
+Hardcode full conjugation tables.
+
+Generator:
+Random subject → conjugate.
+
+Deliverable:
+Irregular verbs trainable.
+
+---
+
+## DAY 9 — Implement C15 (Past Participle -ER)
+
+Generator:
+Random ER verb → produce participle.
+
+Deliverable:
+Participles working.
+
+---
+
+## DAY 10 — Implement C17 (Passé Composé Avoir Structure)
+
+Generator:
+subject + verb → require full phrase:
+
+Example:
+"nous / parler"
+→ "nous avons parlé"
+
+Evaluator:
+Check:
+
+* Auxiliary correct
+* Past participle correct
+
+Deliverable:
+First compound tense operational.
+
+---
+
+## DAY 11 — Negative Structure (C18)
+
+Implement:
+ne + auxiliary + pas + participle
+
+Strict checking.
+
+Deliverable:
+Negation operational.
+
+---
+
+## DAY 12 — Integrate All Concepts into Scheduler
+
+Now session selects among:
+
+C5–C8
+C12
+C13
+C15
+C17
+C18
+
+Deliverable:
+Mixed grammar sessions.
+
+---
+
+## DAY 13 — Weakness Mode Logic
+
+If one concept < 50 strength:
+→ dominates 40% of session.
+
+Deliverable:
+System hunts weakness.
+
+---
+
+## DAY 14 — 3-Day Self Test
+
+Train 3 days consecutively.
+
+Observe:
+
+* Fatigue
+* Repetition patterns
+* Concept dominance
+
+End of Week 2:
+You have functional present + passé composé trainer.
+
+---
+
+# WEEK 3 — Expand Concept Set (C1–C20)
+
+Now we encode the remaining foundation layer.
+
+---
+
+## DAY 15 — Implement C1–C4 (Subject + Gender + Plural Detection)
+
+Simple exercises:
+
+* Replace noun with pronoun
+* Detect gender
+* Detect plural
+
+These support agreement logic later.
+
+---
+
+## DAY 16 — Implement C9 + C10 (-IR & -RE Regular)
+
+Add:
+
+* finir
+* vendre
+
+Generator + evaluator.
+
+---
+
+## DAY 17 — Implement C16 (Past Participle -IR / -RE)
+
+Add:
+
+* fini
+* vendu
+
+Strict checking.
+
+---
+
+## DAY 18 — Implement C19 (Être Verb Set Recognition)
+
+Movement verbs only.
+
+Exercise:
+Select correct auxiliary.
+
+No agreement yet.
+
+---
+
+## DAY 19 — Implement C20 (Être Agreement Singular)
+
+Add rule:
+If feminine subject:
+→ add -e
+
+Evaluator must detect missing agreement.
+
+---
+
+## DAY 20 — Refactor Engine
+
+Refactor:
+
+* Generator abstraction
+* Evaluator modularization
+* Concept → generator mapping
+
+Deliverable:
+Engine clean and scalable.
+
+---
+
+# WEEK 4 — Discipline & AI Encoding Pipeline
+
+Now we weaponize AI + enforcement.
+
+---
+
+## DAY 21 — Daily Enforcement Logic
+
+Add:
+
+* Mandatory 25 exercises/day
+* If skipped:
+  next day = 40
+* If skipped twice:
+  reset streak
+
+No UI fancy. Just logic.
+
+---
+
+## DAY 22 — Strict Mode
+
+Add:
+
+* Accent required
+* No trimming mistakes
+* Time tracking per answer
+
+---
+
+## DAY 23 — Adaptive Escalation
+
+If strength > 85:
+
+* Increase complexity
+* Add negation automatically
+* Add mixed tense prompt
+
+---
+
+## DAY 24 — AI Grammar Encoding Pipeline Setup
+
+Create prompt template:
+
+```
+Extract:
+- Atomic rules
+- Dependencies
+- Verb irregularities
+Return structured JSON.
+```
+
+Test on next PDF chapter.
+
+---
+
+## DAY 25 — Encode 5 New Concepts via AI
+
+Use pipeline.
+Review manually.
+Integrate.
+
+---
+
+## DAY 26 — Add New Concepts to Engine
+
+Attach generator + evaluator.
+
+---
+
+## DAY 27 — Psychological Pressure Layer
+
+Add:
+
+* Session timer
+* Score report
+* “Weakest concept today” highlight
+
+---
+
+## DAY 28 — Stress Test (3 Long Sessions)
+
+Do:
+
+* 75 exercises in one day
+* Measure cognitive load
+
+---
+
+## DAY 29 — Algorithm Tuning
+
+Adjust:
+
+* Strength decay (-20 → maybe -25?)
+* Stability growth
+* Overdue priority weight
+
+---
+
+## DAY 30 — Deploy MVP
+
+Deploy to Firebase Hosting.
+
+Start daily 30-day training cycle.
+
+---
+
+# 🚨 What This Gives You
+
+By Day 30 you will have:
+
+* Adaptive spaced repetition
+* 20+ grammar concepts
+* Automatic weakness targeting
+* Passé composé operational
+* Strict discipline layer
+* AI encoding workflow ready
+
+No fluff.
+No decorative UI.
+Pure grammar combat system.
+
+---
+
+# ⚔ Final Important Note
+
+Extreme Military Mode will feel uncomfortable around Day 10–15.
+
+That means it works.
+
+---
+
+Now we move into implementation.
+
+Next step:
+
+Do you want me to write:
+
+1️⃣ The exact TypeScript data model + scheduler code
+2️⃣ The C5–C8 generator + evaluator implementation
+3️⃣ The AI grammar encoding prompt template system
+
+We now move from roadmap to code.

@@ -1,0 +1,398 @@
+Perfect decision. 🔥
+Personal → Web MVP → validate → then Android.
+
+This is exactly how a senior engineer would approach it.
+
+We’ll design this like a **serious training system**, not a toy app.
+
+---
+
+# 🧠 SYSTEM BLUEPRINT
+
+**Project Name (working):** French Intensive Trainer
+
+---
+
+# 1️⃣ Core Philosophy
+
+This is NOT Duolingo.
+
+It is:
+
+> 🎯 Grammar-driven, drill-heavy, adaptive, weakness-focused training system.
+
+It must:
+
+* Force production (typing, not clicking)
+* Track errors precisely
+* Repeat weak patterns
+* Increase difficulty automatically
+* Feel intense but structured
+
+---
+
+# 2️⃣ High-Level Architecture (Web MVP)
+
+### 🖥 Frontend
+
+* React (Next.js preferred)
+* Tailwind (fast UI)
+* Local state + Firebase sync
+
+### ☁ Backend
+
+* Firebase:
+
+  * Firestore (data)
+  * Auth (optional for now)
+  * Hosting
+
+No custom server needed initially.
+
+---
+
+# 3️⃣ System Architecture Overview
+
+```
+User
+ ↓
+React Frontend
+ ↓
+Exercise Engine (client-side logic)
+ ↓
+Firestore (progress + stats)
+```
+
+AI is not required for MVP.
+
+---
+
+# 4️⃣ Core Modules
+
+## Module 1 — Grammar Structure Layer
+
+Structured representation of your PDF.
+
+Instead of PDF → convert into:
+
+```ts
+GrammarModule {
+  id: "passe_compose",
+  title: "Passé Composé",
+  level: "A2",
+  rules: [],
+  exerciseTypes: []
+}
+```
+
+You manually encode grammar progressively.
+
+---
+
+## Module 2 — Exercise Engine (The Brain)
+
+This is the most important part.
+
+Exercise types:
+
+1. Conjugation
+2. Fill in blank
+3. Sentence transformation
+4. Agreement correction
+5. Error detection
+6. Free typing (advanced later)
+
+---
+
+### Example Exercise Object
+
+```ts
+Exercise {
+  id: "pc_001",
+  type: "conjugation",
+  prompt: "Conjugate: être (nous) in passé composé",
+  correctAnswer: "nous avons été",
+  metadata: {
+    verb: "être",
+    tense: "passe_compose",
+    auxiliary: "avoir"
+  }
+}
+```
+
+---
+
+# 5️⃣ Dynamic Exercise Generator (Important)
+
+Instead of static exercises:
+
+You build **generators**.
+
+Example:
+
+```ts
+generatePasseComposeExercise() {
+  pick random verb
+  pick random subject
+  determine auxiliary
+  build expected answer
+}
+```
+
+Now you get unlimited drills.
+
+This is what makes it intensive.
+
+---
+
+# 6️⃣ Evaluation Engine
+
+Strict comparison at first.
+
+Later:
+
+* Accent tolerance
+* Minor typo tolerance
+* Case normalization
+
+Evaluation result:
+
+```ts
+EvaluationResult {
+  correct: boolean,
+  errorType: "auxiliary_error" | "agreement_error" | "spelling_error"
+}
+```
+
+This is crucial for weakness detection.
+
+---
+
+# 7️⃣ Weakness Tracking System
+
+Instead of just correct/incorrect:
+
+Track:
+
+```
+Verb: être → 60% accuracy
+Tense: passé composé → 72%
+Agreement rule → 45%
+```
+
+Store stats per:
+
+* Verb
+* Tense
+* Rule
+* Exercise type
+
+This enables adaptive repetition.
+
+---
+
+# 8️⃣ Spaced Repetition Layer
+
+Each concept gets:
+
+```
+score
+lastSeen
+nextReviewDate
+difficultyWeight
+```
+
+Basic algorithm:
+
+If correct:
+→ increase interval
+
+If wrong:
+→ reset interval shorter
+
+You can implement simplified SM-2 later.
+
+---
+
+# 9️⃣ User Flow
+
+### Dashboard
+
+* Today’s review count
+* Weak areas
+* Progress chart
+
+### Study Mode
+
+* Choose module
+* Drill mode
+* Timed mode
+* Weakness mode
+
+### Review Mode
+
+* Spaced repetition queue
+
+---
+
+# 🔥 10️⃣ Intensive Mode (Your Special Feature)
+
+Mode where:
+
+* 20 exercises
+* 10 minutes timer
+* No skipping
+* Score at end
+* Mistakes auto-scheduled for tomorrow
+
+This becomes your daily training ritual.
+
+---
+
+# 11️⃣ Database Structure (Firestore)
+
+Collections:
+
+```
+users/
+  userId/
+    progress/
+    stats/
+    reviewQueue/
+```
+
+Grammar modules can initially live in frontend JSON.
+
+---
+
+# 12️⃣ MVP Scope (Keep It Focused)
+
+For first version:
+
+✔ Only 2 grammar modules
+✔ Only 3 exercise types
+✔ Simple scoring
+✔ No AI
+✔ No pronunciation
+✔ No login required (optional)
+
+Ship fast.
+
+---
+
+# 13️⃣ Development Phases
+
+## Phase 1 – Core Engine (1–2 weeks)
+
+* Project setup
+* Grammar module model
+* Exercise generator
+* Evaluation logic
+* Basic UI
+
+## Phase 2 – Tracking
+
+* Stats system
+* Weakness tracking
+* Review queue
+
+## Phase 3 – Polish
+
+* Dashboard
+* Progress graphs
+* Timer mode
+
+---
+
+# 14️⃣ Folder Structure (React)
+
+```
+/src
+  /modules
+  /engine
+  /components
+  /pages
+  /data
+  /hooks
+```
+
+---
+
+# 15️⃣ What AI Should Help You With
+
+Use ChatGPT for:
+
+* Grammar rule modeling
+* Exercise generator logic
+* Spaced repetition algorithm
+* Data modeling
+* Edge cases
+
+Use Copilot for:
+
+* Writing React components
+* Writing Firebase integration
+* Typings
+
+Do NOT add complex AI features early.
+
+---
+
+# 16️⃣ Future AI Upgrade (Phase 2+)
+
+Later you can add:
+
+* AI grammar explanation on mistakes
+* AI sentence correction
+* AI conversation trainer
+* AI dynamic sentence generator
+
+But not for MVP.
+
+---
+
+# 17️⃣ Why Web First Is Smart
+
+* Immediate iteration
+* No Play Store friction
+* Fast UI changes
+* You test daily
+* You validate learning efficiency
+
+When validated:
+Convert to React Native or Android Kotlin.
+
+---
+
+# 🎯 Most Important Design Principle
+
+The app should:
+
+> Detect what you are weak at and force you to fix it.
+
+Not:
+
+> Let you choose comfortable exercises.
+
+---
+
+# 🔍 Now Strategic Question
+
+How intense do you want it?
+
+Level 1 – Structured learner
+Level 2 – Bootcamp mode (daily forced drill)
+Level 3 – Military discipline mode (adaptive pressure + deadlines)
+
+This affects algorithm design.
+
+---
+
+If you want, next I can:
+
+* Design the exact spaced repetition algorithm
+* Design the data model in TypeScript
+* Design the first grammar module blueprint
+* Or create a detailed 30-day development roadmap
+
+Your move.

@@ -1,0 +1,380 @@
+Perfect.
+
+Day 1 must be **surgical, clean, future-proof**.
+
+No overengineering.
+No distractions.
+No UI fluff.
+
+Your only objective:
+
+> Create a stable development battlefield where the grammar engine will live.
+
+---
+
+# 🔥 DAY 1 — PROJECT FOUNDATION (EXTREME MODE)
+
+Target time: 3–5 hours max.
+
+---
+
+# 🎯 GOAL OF DAY 1
+
+By end of today:
+
+* Project runs locally
+* TypeScript strict mode enabled
+* Clean folder structure
+* Core grammar engine folder ready
+* Git repo initialized
+* Firebase project created (not integrated yet)
+* First dummy concept file exists
+
+Nothing more.
+
+---
+
+# 🧱 STEP 1 — Create Project
+
+We go with:
+
+* Next.js (App Router)
+* TypeScript
+* Tailwind (minimal styling)
+* No UI libraries yet
+
+---
+
+### 1. Install Node
+
+Make sure:
+
+```bash
+node -v
+```
+
+Must be ≥ 18.
+
+If not:
+Install from [https://nodejs.org](https://nodejs.org)
+
+---
+
+### 2. Create Project
+
+```bash
+npx create-next-app@latest french-military-trainer
+```
+
+Choose:
+
+* TypeScript → YES
+* ESLint → YES
+* Tailwind → YES
+* App Router → YES
+* src/ directory → YES
+* Import alias → YES
+
+---
+
+### 3. Enter Project
+
+```bash
+cd french-military-trainer
+npm run dev
+```
+
+Confirm:
+[http://localhost:3000](http://localhost:3000) works.
+
+Stop server.
+
+---
+
+# 🧱 STEP 2 — Clean Default Noise
+
+Delete:
+
+```id="a3h9f2"
+/src/app/page.tsx
+/src/app/globals.css (remove demo styles)
+```
+
+Create minimal page:
+
+`/src/app/page.tsx`
+
+```tsx
+export default function Home() {
+  return (
+    <main>
+      <h1>French Military Trainer</h1>
+    </main>
+  );
+}
+```
+
+Keep it brutal and clean.
+
+---
+
+# 🧱 STEP 3 — Enforce Strict TypeScript
+
+Open:
+
+`tsconfig.json`
+
+Ensure:
+
+```json
+"strict": true
+```
+
+If not → set it.
+
+This prevents future grammar engine chaos.
+
+---
+
+# 🧱 STEP 4 — Create Core Architecture
+
+Inside `/src` create:
+
+```
+/core
+/grammar
+/types
+/utils
+```
+
+Structure now becomes:
+
+```
+src/
+  app/
+  core/
+  grammar/
+  types/
+  utils/
+```
+
+---
+
+# 🧱 STEP 5 — Define Core Types
+
+Create:
+
+`/src/types/concept.ts`
+
+```ts
+export type ConceptID =
+  | "present_er_1s"
+  | "present_er_2s"
+  | "present_er_3s"
+  | "present_er_plural";
+
+export interface ConceptState {
+  id: ConceptID;
+  strength: number;
+  stability: number;
+  failureCount: number;
+  nextReview: number;
+}
+```
+
+Keep minimal today.
+
+---
+
+# 🧱 STEP 6 — Create Dummy Concept Registry
+
+`/src/grammar/concepts.ts`
+
+```ts
+import { ConceptState } from "@/types/concept";
+
+export const initialConcepts: ConceptState[] = [
+  {
+    id: "present_er_1s",
+    strength: 50,
+    stability: 1,
+    failureCount: 0,
+    nextReview: Date.now(),
+  },
+  {
+    id: "present_er_2s",
+    strength: 50,
+    stability: 1,
+    failureCount: 0,
+    nextReview: Date.now(),
+  },
+];
+```
+
+This file proves:
+Grammar engine can load concepts.
+
+---
+
+# 🧱 STEP 7 — Create Core Engine Placeholder
+
+`/src/core/sessionEngine.ts`
+
+```ts
+import { ConceptState } from "@/types/concept";
+
+export function selectNextConcept(
+  concepts: ConceptState[]
+): ConceptState | null {
+  if (!concepts.length) return null;
+
+  return concepts.sort((a, b) => a.strength - b.strength)[0];
+}
+```
+
+No logic perfection.
+Just structure.
+
+---
+
+# 🧱 STEP 8 — Wire Engine to UI
+
+Modify `/src/app/page.tsx`
+
+```tsx
+import { initialConcepts } from "@/grammar/concepts";
+import { selectNextConcept } from "@/core/sessionEngine";
+
+export default function Home() {
+  const concept = selectNextConcept(initialConcepts);
+
+  return (
+    <main className="p-8">
+      <h1 className="text-xl font-bold">French Military Trainer</h1>
+      <p>Next Concept: {concept?.id}</p>
+    </main>
+  );
+}
+```
+
+Run:
+
+```bash
+npm run dev
+```
+
+You should see:
+Next Concept: present_er_1s
+
+---
+
+# 🧱 STEP 9 — Initialize Git
+
+Inside project:
+
+```bash
+git init
+git add .
+git commit -m "Day 1 foundation"
+```
+
+Create GitHub repo.
+Push.
+
+No code without version control.
+
+---
+
+# 🧱 STEP 10 — Create Firebase Project (Preparation Only)
+
+Go to:
+
+[https://console.firebase.google.com](https://console.firebase.google.com)
+
+Create:
+
+Project name:
+french-military-trainer
+
+Enable:
+
+* Firestore (test mode for now)
+* Authentication (email only)
+
+Do NOT integrate yet.
+That’s Day 2–3.
+
+---
+
+# 🧱 STEP 11 — Create Development Journal
+
+Inside root:
+
+Create file:
+
+`/DEV_LOG.md`
+
+Write:
+
+```markdown
+# Day 1
+
+- Project created
+- Strict TS enabled
+- Core folders structured
+- Initial concept registry created
+- Engine placeholder working
+```
+
+This forces discipline.
+
+---
+
+# 🔥 WHAT YOU MUST NOT DO TODAY
+
+❌ No styling experiments
+❌ No UI library research
+❌ No authentication setup
+❌ No grammar logic beyond placeholder
+❌ No premature optimization
+
+Day 1 = battlefield preparation only.
+
+---
+
+# 🧠 SUCCESS CRITERIA
+
+You succeed if:
+
+* Project runs
+* Type system strict
+* Concept registry exists
+* Engine can select concept
+* Git committed
+* Firebase project created
+
+---
+
+# ⏱ Expected Time
+
+3–5 hours.
+
+If more:
+You are overcomplicating.
+
+---
+
+Tomorrow (Day 2):
+We design real concept model and session structure.
+
+---
+
+Now execute.
+
+After you finish Day 1, tell me:
+
+* Did anything break?
+* Are you comfortable with Next.js + TS?
+* Do you want deeper architecture control?
+
+We build this like an elite system.

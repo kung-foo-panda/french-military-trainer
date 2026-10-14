@@ -1,0 +1,476 @@
+Good — now we continue building your **French Military AI Trainer**.
+DAY 1 created the **project foundation**.
+DAY 2 builds the **core training engine and first grammar content pipeline**.
+
+This is where the project becomes **a real trainer instead of a webpage**.
+
+---
+
+# DAY 2 — French AI Trainer Build
+
+Goal of Day 2:
+
+1. Implement the **training session engine**
+2. Load **grammar concepts**
+3. Generate **training questions**
+4. Build the **first UI training screen**
+5. Track **user answers**
+6. Prepare structure for **AI-generated grammar later**
+
+By the end of Day 2 you will have:
+
+```
+Your first working trainer session
+Question → answer → feedback → next question
+```
+
+---
+
+# DAY 2 Architecture Overview
+
+We add three important layers:
+
+```
+UI
+ └── Trainer Screen
+
+Training Engine
+ └── sessionEngine.ts
+
+Grammar Knowledge
+ └── concepts.ts
+```
+
+Flow:
+
+```
+Grammar concepts
+      ↓
+Session engine
+      ↓
+Generate question
+      ↓
+User answers
+      ↓
+Evaluate answer
+      ↓
+Next question
+```
+
+---
+
+# STEP 1 — Expand Grammar Model
+
+Open
+
+```
+src/types/concept.ts
+```
+
+Replace with:
+
+```ts
+export type Concept = {
+  id: string
+  name: string
+  explanation: string
+  examples: string[]
+  difficulty: number
+}
+```
+
+Example:
+
+```
+present tense verbs
+articles
+gender rules
+```
+
+---
+
+# STEP 2 — Create First Grammar Concepts
+
+Open:
+
+```
+src/grammar/concepts.ts
+```
+
+Add:
+
+```ts
+import { Concept } from "../types/concept"
+
+export const concepts: Concept[] = [
+  {
+    id: "etre_present",
+    name: "Être — Present Tense",
+    explanation: "The verb être means 'to be'.",
+    difficulty: 1,
+    examples: [
+      "je suis",
+      "tu es",
+      "il est",
+      "nous sommes",
+      "vous êtes",
+      "ils sont"
+    ]
+  },
+  {
+    id: "avoir_present",
+    name: "Avoir — Present Tense",
+    explanation: "The verb avoir means 'to have'.",
+    difficulty: 1,
+    examples: [
+      "j'ai",
+      "tu as",
+      "il a",
+      "nous avons",
+      "vous avez",
+      "ils ont"
+    ]
+  }
+]
+```
+
+Later AI will **generate thousands automatically**.
+
+---
+
+# STEP 3 — Build Question Generator
+
+Open:
+
+```
+src/core/sessionEngine.ts
+```
+
+Add:
+
+```ts
+import { concepts } from "../grammar/concepts"
+
+export function generateQuestion() {
+
+  const concept =
+    concepts[Math.floor(Math.random() * concepts.length)]
+
+  const example =
+    concept.examples[
+      Math.floor(Math.random() * concept.examples.length)
+    ]
+
+  return {
+    concept: concept.name,
+    question: "Translate to English",
+    french: example
+  }
+}
+```
+
+Example output:
+
+```
+Translate to English:
+
+"nous sommes"
+```
+
+---
+
+# STEP 4 — Build Trainer UI
+
+Open:
+
+```
+src/app/page.tsx
+```
+
+Replace everything with:
+
+```tsx
+"use client"
+
+import { useState } from "react"
+import { generateQuestion } from "../core/sessionEngine"
+
+export default function TrainerPage() {
+
+  const [question, setQuestion] = useState(generateQuestion())
+  const [answer, setAnswer] = useState("")
+  const [feedback, setFeedback] = useState("")
+
+  function checkAnswer() {
+
+    if (answer.length === 0) {
+      setFeedback("Enter an answer.")
+      return
+    }
+
+    setFeedback("Answer recorded.")
+
+    setTimeout(() => {
+      setQuestion(generateQuestion())
+      setAnswer("")
+      setFeedback("")
+    }, 1500)
+  }
+
+  return (
+    <main style={{ padding: 40 }}>
+
+      <h1>French Military Trainer</h1>
+
+      <h2>{question.question}</h2>
+
+      <h3>{question.french}</h3>
+
+      <input
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+        placeholder="Your answer"
+      />
+
+      <br />
+      <br />
+
+      <button onClick={checkAnswer}>
+        Submit
+      </button>
+
+      <p>{feedback}</p>
+
+    </main>
+  )
+}
+```
+
+---
+
+# STEP 5 — Run the Trainer
+
+Start server:
+
+```
+npm run dev
+```
+
+Open:
+
+```
+http://localhost:3000
+```
+
+You will see:
+
+```
+French Military Trainer
+
+Translate to English
+nous sommes
+
+[answer box]
+
+Submit
+```
+
+---
+
+# STEP 6 — Improve Question System
+
+Update `sessionEngine.ts`.
+
+Add types:
+
+```ts
+export type Question = {
+  concept: string
+  question: string
+  french: string
+}
+```
+
+Return type:
+
+```
+function generateQuestion(): Question
+```
+
+This prepares for:
+
+```
+AI-generated questions
+difficulty levels
+progress tracking
+```
+
+---
+
+# STEP 7 — Add Difficulty Selection
+
+Modify generator:
+
+```ts
+export function generateQuestion(level = 1) {
+
+  const filtered = concepts.filter(
+    c => c.difficulty <= level
+  )
+
+  const concept =
+    filtered[Math.floor(Math.random() * filtered.length)]
+
+  const example =
+    concept.examples[
+      Math.floor(Math.random() * concept.examples.length)
+    ]
+
+  return {
+    concept: concept.name,
+    question: "Translate to English",
+    french: example
+  }
+}
+```
+
+---
+
+# STEP 8 — Create Training Session State
+
+Create new file:
+
+```
+src/core/sessionState.ts
+```
+
+```ts
+export type SessionState = {
+  correct: number
+  incorrect: number
+  streak: number
+}
+```
+
+Later this powers:
+
+```
+spaced repetition
+AI adaptation
+difficulty scaling
+```
+
+---
+
+# STEP 9 — Prepare AI Grammar Encoding
+
+Create folder:
+
+```
+src/ai
+```
+
+Create file:
+
+```
+src/ai/grammarEncoder.ts
+```
+
+Add placeholder:
+
+```ts
+export function encodeGrammarFromPDF() {
+
+  // future AI pipeline
+
+  // PDF → GPT → structured grammar concepts
+
+}
+```
+
+This is where we later plug in:
+
+```
+OpenAI API
+Claude API
+local LLM
+```
+
+---
+
+# Result of DAY 2
+
+Your system now has:
+
+```
+Grammar database
+Question generator
+Training UI
+Answer flow
+Session tracking foundation
+```
+
+This is already **a functioning trainer prototype**.
+
+---
+
+# What happens on DAY 3 (very powerful)
+
+Day 3 will implement:
+
+### Real answer validation
+
+```
+nous sommes → we are
+```
+
+AI will accept variants:
+
+```
+we are
+we're
+```
+
+---
+
+### Grammar parsing
+
+Example:
+
+```
+je suis → I am
+```
+
+AI explains:
+
+```
+je = I
+suis = am
+```
+
+---
+
+### Spaced repetition algorithm
+
+You will build:
+
+```
+Anki-style algorithm
+```
+
+This is the **real learning engine**.
+
+---
+
+# If you want, next I can also show you
+
+**DAY 3 — where the project becomes a real AI tutor**
+
+including:
+
+* AI answer evaluation
+* spaced repetition
+* grammar explanation
+* automatic lesson generation
+
+This is where the project becomes **extremely powerful.**

@@ -1,0 +1,370 @@
+Good.
+
+Minimal. Brutal. Functional.
+No pretty dashboards. No gamification. No comfort.
+
+We build a **grammar combat engine**.
+
+---
+
+# 🔥 PHASE 1 — MINIMAL BUT BRUTAL SYSTEM
+
+You are building:
+
+> A deterministic adaptive grammar punishment machine.
+
+We will now define:
+
+1. System philosophy
+2. Core architecture
+3. Data model
+4. Extreme repetition algorithm
+5. 30-day execution breakdown (technical focus)
+
+---
+
+# 1️⃣ System Philosophy (Extreme Military Mode)
+
+Rules:
+
+* You do not choose what to study.
+* The system schedules everything.
+* Mistakes increase exposure.
+* Weakness overrides new content.
+* Daily minimum enforced.
+* No “I feel like studying X”.
+
+The system owns the curriculum.
+
+---
+
+# 2️⃣ Minimal Architecture (Web MVP)
+
+Stack:
+
+* Next.js (TypeScript)
+* Local state first (no Firebase yet)
+* JSON grammar files
+* Zero styling effort
+
+Structure:
+
+```
+/src
+  /core
+    engine.ts
+    scheduler.ts
+    evaluator.ts
+  /grammar
+    rules.json
+    verbs.json
+  /app
+    session.tsx
+    dashboard.tsx
+```
+
+No abstraction circus.
+No overengineering.
+
+---
+
+# 3️⃣ Core Data Model (Lean + Brutal)
+
+### Grammar Rule
+
+```ts
+type GrammarRule = {
+  id: string
+  name: string
+  difficulty: number
+  dependencies: string[]
+}
+```
+
+---
+
+### Drill Item
+
+Each trainable concept becomes:
+
+```ts
+type Concept = {
+  id: string
+  ruleId: string
+  strength: number      // 0–100
+  stability: number     // interval control
+  lastReviewed: number
+  nextReview: number
+  failureCount: number
+}
+```
+
+This is your battlefield unit.
+
+---
+
+# 4️⃣ The Extreme Repetition Algorithm
+
+This is the core.
+
+We do NOT implement classic SM-2.
+We implement aggressive adaptive decay.
+
+---
+
+## Core Principles
+
+1. Strength increases slowly.
+2. Strength drops aggressively.
+3. Failure multiplies exposure.
+4. Weakest 20% dominate session.
+5. Overdue concepts override everything.
+
+---
+
+## Strength Update Logic
+
+If correct:
+
+```
+strength += 5
+stability += 1
+```
+
+If wrong:
+
+```
+strength -= 20
+failureCount += 1
+stability = 1
+```
+
+No mercy.
+
+---
+
+## Scheduling Logic
+
+Next review interval:
+
+```
+interval = baseInterval * stability
+```
+
+But if failureCount > 2:
+
+```
+interval = 1 day
+```
+
+If strength < 40:
+
+→ reinsert into same session.
+
+---
+
+## Session Selection Logic
+
+When session starts:
+
+1. Fetch all concepts
+2. Sort by:
+
+   * Overdue first
+   * Lowest strength next
+   * Highest failureCount next
+3. Select top 20
+
+No randomness.
+
+No comfort.
+
+---
+
+# 5️⃣ Session Structure (Military)
+
+Daily minimum: 25 exercises
+Minimum time: 20 minutes
+No skipping allowed
+
+Session flow:
+
+```
+while session not finished:
+   generate exercise from weakest concept
+   evaluate
+   update strength
+   reschedule
+```
+
+If session aborted:
+→ next day doubles minimum.
+
+---
+
+# 6️⃣ Why This Is Powerful
+
+Most apps:
+
+* reward completion
+* ignore weakness
+* allow skipping
+* spread attention equally
+
+This system:
+
+* hunts failure patterns
+* forces correction
+* prevents dilution
+
+You will not forget passé composé.
+
+---
+
+# 7️⃣ Week-by-Week Build Plan (Minimal Version)
+
+Now the realistic technical roadmap.
+
+---
+
+## WEEK 1 — Core Engine
+
+Day 1–2:
+
+* Setup Next.js
+* Implement Concept model
+* Hardcode 10 concepts (present tense verbs)
+
+Day 3:
+
+* Build evaluator (string compare)
+* Implement strength logic
+
+Day 4:
+
+* Build scheduler
+* Implement session selection logic
+
+Day 5:
+
+* Create simple CLI-like UI page
+* Input box
+* Feedback text
+
+Day 6:
+
+* Add immediate reinsert logic for low strength
+
+Day 7:
+
+* Manual test 100 exercises
+
+You now have a brutal repetition engine.
+
+---
+
+## WEEK 2 — Expand Concept Depth
+
+Day 8–9:
+
+* Add passé composé
+* Add auxiliary logic
+
+Day 10:
+
+* Add agreement detection
+
+Day 11:
+
+* Add failure type classification
+
+Day 12:
+
+* Add session summary report
+
+Day 13:
+
+* Add daily enforcement logic
+
+Day 14:
+
+* Stress test yourself
+
+---
+
+## WEEK 3 — AI Grammar Encoding Pipeline
+
+Now we bring AI in.
+
+You create a repeatable workflow:
+
+Step 1:
+Paste grammar explanation.
+
+Step 2:
+Prompt:
+
+> Extract rules, dependencies, irregular forms, edge cases.
+> Return structured JSON.
+
+Step 3:
+Review.
+
+Step 4:
+Insert into grammar JSON.
+
+Step 5:
+Write generator.
+
+Repeat per chapter.
+
+You encode 2–3 rules per day.
+
+---
+
+## WEEK 4 — Psychological Pressure Layer
+
+Add:
+
+* Strict accent requirement
+* Time-based scoring
+* No progress unless 80% accuracy
+* Auto-daily plan generator
+
+---
+
+# 8️⃣ Now Very Important
+
+Minimal brutal mode means:
+
+* No Firebase yet.
+* No auth.
+* No dashboard graphs.
+* No styling effort.
+* Pure engine + pure discipline.
+
+You evolve later.
+
+---
+
+# 9️⃣ The Real Question
+
+Extreme Military Mode has a cost:
+
+It will feel uncomfortable.
+It will surface weaknesses brutally.
+It may feel repetitive and hard.
+
+That is correct design.
+
+---
+
+Now we move from philosophy to implementation.
+
+Next step options:
+
+1️⃣ I design the exact TypeScript scheduler + strength algorithm code
+2️⃣ I design the AI grammar encoding prompt system
+3️⃣ I design the first 20 concrete concepts for implementation
+
+Pick one and we go deep technically.

@@ -1,0 +1,505 @@
+Excellent. 🔥
+Level 3 means we are building a **serious cognitive training system**, not a hobby app.
+
+You’re not “learning French”.
+
+You’re building a **controlled grammar acquisition machine**.
+
+---
+
+# First — What I Meant By
+
+## “You manually encode grammar progressively”
+
+I did NOT mean you sit and type everything alone.
+
+I meant:
+
+Instead of importing the PDF blindly,
+you **convert it into structured machine-readable grammar units**.
+
+And yes — AI will help you do that.
+
+### Example
+
+PDF chapter:
+
+> The Passé Composé with Avoir
+
+We convert that into structured data like:
+
+```ts
+GrammarRule {
+  id: "pc_avoir_core",
+  category: "tense",
+  title: "Passé Composé with Avoir",
+  pattern: "subject + avoir + past participle",
+  dependencies: ["present_avoir", "past_participle_regular"],
+  examples: [],
+  difficulty: 2
+}
+```
+
+You do NOT write this manually.
+
+You:
+
+1. Paste grammar explanation
+2. Ask AI:
+
+   * Extract rule
+   * Normalize structure
+   * Identify dependencies
+   * Generate verb lists
+   * Generate irregular patterns
+3. Review output
+4. Store structured JSON
+
+That’s what “encode progressively” means.
+
+It becomes a knowledge graph of French grammar.
+
+And that is extremely powerful.
+
+---
+
+# Now — Your Level 3 Roadmap
+
+We structure this into 4 Phases.
+
+You are a technical person, so we’ll treat this as a proper engineering sprint plan.
+
+---
+
+# 🔥 30-DAY DEVELOPMENT ROADMAP
+
+(Serious, disciplined, production-minded)
+
+---
+
+# WEEK 1 — Architecture & Core Engine
+
+### 🎯 Goal:
+
+Have a working drill engine locally without Firebase.
+
+---
+
+## Day 1 — Project Setup
+
+* Setup Next.js (TypeScript)
+* Add Tailwind
+* Setup basic layout
+* Create clean folder structure
+
+Deliverable:
+App runs locally.
+
+---
+
+## Day 2 — Core Domain Models
+
+Design:
+
+* GrammarRule
+* GrammarModule
+* Exercise
+* EvaluationResult
+* UserStats
+* ReviewItem
+
+No UI. Pure domain modeling.
+
+Deliverable:
+Well-typed models.
+
+---
+
+## Day 3 — Basic Exercise Engine
+
+Implement:
+
+* Static conjugation exercise
+* Simple answer comparison
+* Feedback system
+
+Deliverable:
+One working exercise screen.
+
+---
+
+## Day 4 — Generator System
+
+Implement first dynamic generator:
+
+* Random subject
+* Random verb
+* Present tense conjugation
+
+Deliverable:
+Unlimited present tense drills.
+
+---
+
+## Day 5 — Error Classification
+
+Add logic to detect:
+
+* Wrong auxiliary
+* Wrong agreement
+* Wrong verb ending
+* Spelling issue
+
+This is critical for Level 3.
+
+Deliverable:
+System returns structured error type.
+
+---
+
+## Day 6 — Weakness Tracker
+
+Track:
+
+* Accuracy per tense
+* Accuracy per verb
+* Accuracy per rule
+
+Store in local state.
+
+Deliverable:
+Stats update after each exercise.
+
+---
+
+## Day 7 — Review & Refactor
+
+* Clean code
+* Remove duplication
+* Add test cases for engine logic
+
+You now have:
+A local grammar drill engine.
+
+---
+
+# WEEK 2 — Level 3 Intensity Layer
+
+Now we make it brutal.
+
+---
+
+## Day 8 — Review Queue System
+
+Add:
+
+* Concept scoring
+* nextReviewDate
+* basic spaced repetition logic
+
+Deliverable:
+Items reappear based on performance.
+
+---
+
+## Day 9 — Spaced Repetition Algorithm
+
+Implement simplified SM-2 logic:
+
+If correct:
+→ increase interval
+
+If wrong:
+→ reset to short interval
+
+Deliverable:
+Adaptive repetition system.
+
+---
+
+## Day 10 — Intensive Mode
+
+Add:
+
+* 20-question session
+* Timer
+* No skipping
+* Summary report
+
+Deliverable:
+Bootcamp session mode.
+
+---
+
+## Day 11 — Weakness Mode
+
+Generate exercises based only on:
+
+* Lowest performing tense
+* Worst verbs
+* Recent failures
+
+Deliverable:
+System attacks your weakest areas.
+
+---
+
+## Day 12 — Failure Reinforcement
+
+If mistake occurs:
+
+* Same rule appears again within session
+* Slight variation
+
+Deliverable:
+Immediate reinforcement loop.
+
+---
+
+## Day 13 — Progress Dashboard
+
+Show:
+
+* Accuracy by tense
+* Accuracy by module
+* Review load
+* Streak
+
+Deliverable:
+Visual performance panel.
+
+---
+
+## Day 14 — Stabilization
+
+* Fix bugs
+* Improve UI
+* Clean data handling
+
+At end of Week 2:
+You have a fully functional Level 3 drill trainer.
+
+---
+
+# WEEK 3 — Grammar Encoding + AI Assisted Structuring
+
+Now we integrate the PDF properly.
+
+---
+
+## Day 15 — Grammar Encoding Framework
+
+Create script/process:
+
+Input:
+Raw grammar explanation
+
+Output:
+Structured GrammarRule JSON
+
+You create AI prompt template:
+
+> Extract rule, pattern, dependencies, irregularities, sample verbs.
+
+Deliverable:
+Reusable AI prompt template.
+
+---
+
+## Day 16 — Encode 3 Core Modules
+
+Example:
+
+* Present tense
+* Passé composé (avoir)
+* Être verbs
+
+Use AI to structure them.
+
+Review carefully.
+
+Deliverable:
+3 structured modules.
+
+---
+
+## Day 17 — Verb Database
+
+Create structured verb list:
+
+* Regular -er
+* Regular -ir
+* Regular -re
+* Top 50 irregular verbs
+
+Deliverable:
+Verb database JSON.
+
+---
+
+## Day 18 — Agreement Engine
+
+Implement logic:
+
+* Gender agreement
+* Plural agreement
+* Être verb agreement
+
+Deliverable:
+Agreement correctness detection.
+
+---
+
+## Day 19 — Sentence Generator
+
+Upgrade from:
+
+Single verb drill
+
+To:
+
+Full sentence generator.
+
+Deliverable:
+Contextual sentence exercises.
+
+---
+
+## Day 20 — Adaptive Difficulty Scaling
+
+Difficulty increases when:
+
+* Accuracy > 85%
+* Response time decreases
+
+Deliverable:
+System becomes self-adjusting.
+
+---
+
+## Day 21 — Review & Refactor
+
+Clean grammar encoding pipeline.
+
+---
+
+# WEEK 4 — Psychological Pressure & Optimization
+
+Now we turn it into Level 3.
+
+---
+
+## Day 22 — Strict Mode
+
+* No autocorrect tolerance
+* Accent required
+* Time penalty
+
+---
+
+## Day 23 — Performance Metrics
+
+Track:
+
+* Response time
+* Consistency
+* Focus score
+
+---
+
+## Day 24 — Daily Mandatory Session Logic
+
+System requires:
+
+* Minimum exercises per day
+* Streak penalty if skipped
+
+---
+
+## Day 25 — Intelligent Daily Plan Generator
+
+Based on:
+
+* Weakness
+* Overdue reviews
+* New material ratio
+
+---
+
+## Day 26 — Error Pattern Analytics
+
+Detect:
+
+* Systematic auxiliary confusion
+* Agreement confusion
+* Specific verb confusion
+
+---
+
+## Day 27 — UX Polish
+
+* Cleaner dashboard
+* Clear progress bars
+* Motivational but serious tone
+
+---
+
+## Day 28 — Internal Testing
+
+You train for 3 days intensely.
+
+Log:
+
+* Frustration points
+* Repetition problems
+* UI friction
+
+---
+
+## Day 29 — Adjust Algorithms
+
+Tune:
+
+* Spaced repetition intervals
+* Difficulty thresholds
+* Weakness prioritization
+
+---
+
+## Day 30 — Version 1 Release
+
+Deploy to Firebase hosting.
+
+Start daily Level 3 training.
+
+---
+
+# 🚨 Very Important
+
+Level 3 only works if:
+
+* You do not skip days.
+* You do not manually choose easy modules.
+* You let the system control you.
+
+---
+
+# 🧠 Now Let’s Decide
+
+Before we continue:
+
+Do you want:
+
+1. A strict daily plan enforced by system?
+2. Or adaptive but flexible?
+3. Or extreme military mode?
+
+Because that affects how we design the discipline layer.
+
+Next, I can:
+
+* Design the grammar encoding AI pipeline
+* Or design the spaced repetition algorithm in detail
+* Or create the initial project skeleton
+
+Your move.

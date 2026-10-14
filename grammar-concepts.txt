@@ -1,0 +1,347 @@
+Perfect. 🔥
+We start with **concrete battlefield units**.
+
+These first 20 concepts will be:
+
+* Small
+* Atomic
+* Measurable
+* Machine-trainable
+* Foundation-critical
+
+We are not encoding full chapters.
+We are encoding **trainable micro-skills**.
+
+---
+
+# 🎯 PHASE 1 CONCEPT SET
+
+(Foundational Combat Layer)
+
+Focus: Present tense + Auxiliary foundation
+Because everything later depends on this.
+
+---
+
+# 🧱 CATEGORY A — Subject Control (4 Concepts)
+
+These look trivial — they are not.
+
+---
+
+### C1 — Subject Pronouns Recognition
+
+**Concept ID:** `subj_pronouns_core`
+Skill: Identify correct subject pronoun
+Trainable as:
+
+> Replace name with correct pronoun
+
+Example:
+
+```
+Marie → elle
+Pierre et moi → nous
+```
+
+Weak here = everything collapses later.
+
+---
+
+### C2 — Subject → Person Mapping
+
+**Concept ID:** `subject_person_index`
+
+Skill: Map subject to conjugation slot:
+
+| je → 1S |
+| tu → 2S |
+| nous → 1P |
+
+Trainable via:
+
+> Which ending slot applies?
+
+---
+
+### C3 — Plural Identification
+
+**Concept ID:** `plural_detection`
+
+Skill: Detect plural subject
+
+Used later for agreement.
+
+---
+
+### C4 — Gender Detection (Basic)
+
+**Concept ID:** `gender_detection_basic`
+
+Skill:
+Recognize masculine vs feminine subject.
+
+Required for être agreement later.
+
+---
+
+# 🧱 CATEGORY B — Present Tense Regular Verbs (8 Concepts)
+
+We split by verb group and ending pattern.
+
+---
+
+### C5 — -ER verbs 1st person singular
+
+`present_er_1s`
+
+Example:
+parler → je parle
+
+Atomic skill: correct ending -e
+
+---
+
+### C6 — -ER verbs 2nd person singular
+
+`present_er_2s`
+
+Ending: -es
+
+---
+
+### C7 — -ER verbs 3rd person singular
+
+`present_er_3s`
+
+Ending: -e
+
+---
+
+### C8 — -ER verbs plural endings
+
+`present_er_plural`
+
+Endings:
+
+* nous → -ons
+* vous → -ez
+* ils → -ent
+
+---
+
+### C9 — -IR regular verbs
+
+`present_ir_regular`
+
+Ending pattern:
+
+* is / is / it / iss / iss / issent
+
+---
+
+### C10 — -RE regular verbs
+
+`present_re_regular`
+
+Ending pattern:
+
+* s / s / (nothing) / ons / ez / ent
+
+---
+
+### C11 — Stem handling (no change)
+
+`present_stem_stability`
+
+Skill:
+Keep stem constant (parl-, fin-, vend-)
+
+---
+
+### C12 — Basic irregular: être
+
+`present_etre`
+
+All forms must be memorized.
+
+---
+
+# 🧱 CATEGORY C — Auxiliary Foundation (4 Concepts)
+
+This prepares for passé composé.
+
+---
+
+### C13 — Avoir present tense
+
+`present_avoir`
+
+Critical foundation.
+
+---
+
+### C14 — Auxiliary selection logic intro
+
+`auxiliary_selection_intro`
+
+Skill:
+Default is avoir.
+
+Used later for exceptions.
+
+---
+
+### C15 — Past participle formation (-ER)
+
+`pp_er_regular`
+
+parler → parlé
+
+---
+
+### C16 — Past participle formation (-IR / -RE)
+
+`pp_ir_re_regular`
+
+finir → fini
+vendre → vendu
+
+---
+
+# 🧱 CATEGORY D — Passé Composé Basic (4 Concepts)
+
+Now we combine.
+
+---
+
+### C17 — Passé composé structure (avoir)
+
+`pc_structure_avoir`
+
+Pattern:
+subject + avoir + past participle
+
+No agreement yet.
+
+---
+
+### C18 — Negative passé composé structure
+
+`pc_negation_basic`
+
+ne + auxiliary + pas + participle
+
+---
+
+### C19 — Être auxiliary verbs list intro
+
+`pc_etre_verb_set`
+
+Movement verbs concept only (aller, venir, etc.)
+
+Recognition only for now.
+
+---
+
+### C20 — Être agreement basic singular
+
+`pc_etre_agreement_singular`
+
+Add -e if feminine.
+
+No plural yet.
+
+---
+
+# 🔥 Why These 20?
+
+Because they form:
+
+* Subject system
+* Present system
+* Auxiliary system
+* First compound tense
+* First agreement exposure
+
+Everything in French grammar builds on this.
+
+---
+
+# ⚔ How These Become Trainable Units
+
+Each concept must produce exercises.
+
+Example for C5:
+
+Generator:
+
+```
+Random ER verb
+Random subject
+Ask: conjugate
+```
+
+Evaluation:
+
+Check:
+
+* Correct stem
+* Correct ending
+
+If ending wrong:
+Failure classified as:
+"ending_error"
+
+That matters later.
+
+---
+
+# 🧠 Strength Target Rules (Extreme Mode)
+
+Concept considered “stable” only if:
+
+* Strength ≥ 80
+* FailureCount < 2
+* 3 successful spaced recalls
+
+Until then:
+It keeps coming back.
+
+---
+
+# 🧨 What You Should Implement First
+
+Implementation order:
+
+1. C5–C8 (-ER verbs)
+2. C12 + C13 (être + avoir)
+3. C15 (past participle -ER)
+4. C17 (pc structure)
+
+Because this already gives you:
+
+Present + first compound tense.
+
+---
+
+# 🚨 Important
+
+Do NOT encode everything at once.
+
+Extreme military mode builds layer by layer.
+
+Mastery first.
+Expansion second.
+
+---
+
+Now next decision:
+
+Do you want me to:
+
+1️⃣ Design the generator + evaluator logic for C5–C8
+2️⃣ Design the concept JSON schema for all 20
+3️⃣ Design the strength decay mathematical model precisely
+
+We now go from planning → engineering.
