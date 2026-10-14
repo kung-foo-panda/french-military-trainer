@@ -1,3 +1,4 @@
+import { AccountPanel } from "@/components/AccountPanel"
 import { Card } from "@/components/ui/Card"
 
 export default function SettingsPage() {
@@ -10,12 +11,12 @@ export default function SettingsPage() {
         </p>
       </header>
 
+      <AccountPanel />
+
       <Card className="space-y-3">
-        <h2 className="font-medium">Planned settings</h2>
+        <h2 className="font-medium">Coming soon</h2>
         <ul className="list-disc space-y-1 pl-5 text-sm text-ink-soft">
-          <li>Sign in / account (Firebase Auth)</li>
           <li>Daily exercise target</li>
-          <li>Device sync across sessions</li>
           <li>Content and AI-generated data preferences</li>
         </ul>
       </Card>

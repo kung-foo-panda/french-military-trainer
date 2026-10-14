@@ -5,6 +5,7 @@ import {
 import { type DailyMetrics } from "../../core/dailyMetrics"
 import type { ConceptState } from "../../types/conceptState"
 import type { ProgressRepository } from "../ProgressRepository"
+import { emitProgress } from "../events"
 import {
   LEGACY_KEYS,
   PROGRESS_KEY,
@@ -38,6 +39,10 @@ export class LocalProgressRepository implements ProgressRepository {
 
   loadSnapshot(): ProgressSnapshot {
     return this.ensure()
+  }
+
+  saveSnapshot(snapshot: ProgressSnapshot): void {
+    this.write(snapshot)
   }
 
   loadConceptStates(): ConceptState[] {
@@ -156,5 +161,6 @@ export class LocalProgressRepository implements ProgressRepository {
   private write(snapshot: ProgressSnapshot): void {
     this.current = snapshot
     this.storage.setItem(PROGRESS_KEY, JSON.stringify(snapshot))
+    emitProgress(snapshot)
   }
 }

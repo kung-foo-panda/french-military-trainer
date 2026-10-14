@@ -10,6 +10,7 @@ import type { ProgressSnapshot } from "./schema"
  */
 export interface ProgressRepository {
   loadSnapshot(): ProgressSnapshot
+  saveSnapshot(snapshot: ProgressSnapshot): void
   loadConceptStates(): ConceptState[]
   saveConceptStates(states: ConceptState[]): void
   loadEnforcement(): EnforcementRecord

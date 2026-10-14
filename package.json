@@ -9,9 +9,11 @@
     "lint": "eslint",
     "test": "npx --no-install tsx --test \"tests/**/*.test.ts\"",
     "deploy": "next build && npx firebase-tools deploy --only hosting",
+    "deploy:rules": "npx firebase-tools deploy --only firestore:rules",
     "preview": "npx firebase-tools serve --only hosting"
   },
   "dependencies": {
+    "firebase": "^13.0.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"

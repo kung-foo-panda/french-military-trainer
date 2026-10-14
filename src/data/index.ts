@@ -2,9 +2,11 @@ import type { ProgressRepository } from "./ProgressRepository"
 import { LocalProgressRepository } from "./local/LocalProgressRepository"
 
 export * from "./schema"
+export * from "./events"
 export * from "./ProgressRepository"
 export * from "./local/LocalProgressRepository"
 export * from "./local/guards"
+export * from "./sync"
 
 let singleton: ProgressRepository | null = null
 
