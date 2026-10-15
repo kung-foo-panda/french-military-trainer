@@ -12,8 +12,8 @@ function allSchedulableStates(): ConceptState[] {
   return statesFor(schedulableConceptIds)
 }
 
-test("pool size is 23 schedulable concepts", () => {
-  assert.equal(schedulableConceptIds.length, 23)
+test("pool size is 31 schedulable concepts", () => {
+  assert.equal(schedulableConceptIds.length, 31)
 })
 
 test("selectNextConcept honours a forced concept id", () => {

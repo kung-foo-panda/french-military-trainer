@@ -49,4 +49,10 @@ export const chapters: Chapter[] = [
     title: "Passé composé",
     source: source("pdf", "book:passe-compose"),
   },
+  {
+    id: "ch-irregular-common",
+    number: 7,
+    title: "Irregular verbs: core modals & common verbs (present)",
+    source: source("ai", "batch2:ch7"),
+  },
 ]

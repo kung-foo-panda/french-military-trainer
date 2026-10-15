@@ -397,6 +397,96 @@ export const concepts: Concept[] = [
     difficulty: 2,
     kind: "futur_proche",
   },
+
+  // —— Phase 6: core modals & common irregular verbs (present) ——
+  {
+    id: "present_pouvoir",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Pouvoir (présent)",
+    explanation:
+      "pouvoir: je peux, tu peux, il peut, nous pouvons, vous pouvez, ils peuvent.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "pouvoir",
+  },
+  {
+    id: "present_vouloir",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Vouloir (présent)",
+    explanation:
+      "vouloir: je veux, tu veux, il veut, nous voulons, vous voulez, ils veulent.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "vouloir",
+  },
+  {
+    id: "present_devoir",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Devoir (présent)",
+    explanation:
+      "devoir: je dois, tu dois, il doit, nous devons, vous devez, ils doivent.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "devoir",
+  },
+  {
+    id: "present_venir",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Venir (présent)",
+    explanation:
+      "venir: je viens, tu viens, il vient, nous venons, vous venez, ils viennent.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "venir",
+  },
+  {
+    id: "present_prendre",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Prendre (présent)",
+    explanation:
+      "prendre: je prends, tu prends, il prend, nous prenons, vous prenez, ils prennent.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "prendre",
+  },
+  {
+    id: "present_voir",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Voir (présent)",
+    explanation:
+      "voir: je vois, tu vois, il voit, nous voyons, vous voyez, ils voient.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "voir",
+  },
+  {
+    id: "present_dire",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Dire (présent)",
+    explanation:
+      "dire: je dis, tu dis, il dit, nous disons, vous dites, ils disent.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "dire",
+  },
+  {
+    id: "present_mettre",
+    chapterId: "ch-irregular-common",
+    source: source("ai", "batch2:ch7"),
+    name: "Mettre (présent)",
+    explanation:
+      "mettre: je mets, tu mets, il met, nous mettons, vous mettez, ils mettent.",
+    difficulty: 2,
+    kind: "conjugate_irregular",
+    verb: "mettre",
+  },
 ]
 
 /** Day 12: the mixed-session pool (excludes schedulable: false). */

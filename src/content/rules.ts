@@ -125,4 +125,52 @@ export const rules: Rule[] = [
     text: "With être the participle agrees with the subject (elle est allée).",
     source: pdf("passe-compose"),
   },
+  {
+    id: "r-irr-common-1",
+    chapterId: "ch-irregular-common",
+    text: "pouvoir: peux / peux / peut / pouvons / pouvez / peuvent.",
+    source: source("ai", "batch2:ch7"),
+  },
+  {
+    id: "r-irr-common-2",
+    chapterId: "ch-irregular-common",
+    text: "vouloir: veux / veux / veut / voulons / voulez / veulent.",
+    source: source("ai", "batch2:ch7"),
+  },
+  {
+    id: "r-irr-common-3",
+    chapterId: "ch-irregular-common",
+    text: "devoir: dois / dois / doit / devons / devez / doivent.",
+    source: source("ai", "batch2:ch7"),
+  },
+  {
+    id: "r-irr-common-4",
+    chapterId: "ch-irregular-common",
+    text: "venir: viens / viens / vient / venons / venez / viennent.",
+    source: source("ai", "batch2:ch7"),
+  },
+  {
+    id: "r-irr-common-5",
+    chapterId: "ch-irregular-common",
+    text: "prendre: prends / prends / prend / prenons / prenez / prennent.",
+    source: source("ai", "batch2:ch7"),
+  },
+  {
+    id: "r-irr-common-6",
+    chapterId: "ch-irregular-common",
+    text: "voir: vois / vois / voit / voyons / voyez / voient.",
+    source: source("ai", "batch2:ch7"),
+  },
+  {
+    id: "r-irr-common-7",
+    chapterId: "ch-irregular-common",
+    text: "dire: dis / dis / dit / disons / dites / disent (note: vous dites).",
+    source: source("ai", "batch2:ch7"),
+  },
+  {
+    id: "r-irr-common-8",
+    chapterId: "ch-irregular-common",
+    text: "mettre: mets / mets / met / mettons / mettez / mettent.",
+    source: source("ai", "batch2:ch7"),
+  },
 ]

@@ -43,7 +43,19 @@ export type ConjugateRegularConcept = ConceptBase & {
   kind: "conjugate_regular"
 }
 
-export type IrregularVerb = "etre" | "avoir" | "aller" | "faire"
+export type IrregularVerb =
+  | "etre"
+  | "avoir"
+  | "aller"
+  | "faire"
+  | "venir"
+  | "prendre"
+  | "pouvoir"
+  | "vouloir"
+  | "devoir"
+  | "voir"
+  | "dire"
+  | "mettre"
 
 export type ConjugateIrregularConcept = ConceptBase & {
   kind: "conjugate_irregular"

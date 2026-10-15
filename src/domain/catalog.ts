@@ -1,4 +1,5 @@
-import { encodedBatch1 } from "../content/encoded/batch1"
+import { encodedBatches, type EncodedBatch } from "../content/encoded"
+import type { EncodedConcept } from "../ai/encodedConcept"
 import { chapters } from "../content/chapters"
 import { rules } from "../content/rules"
 import { concepts } from "../grammar/concepts"
@@ -9,9 +10,13 @@ import { exerciseTypesForConcept } from "./exerciseType"
 import { source, type SourceRef } from "./provenance"
 
 const FALLBACK_SOURCE: SourceRef = source("manual", "scaffold:person-drills")
-const ENCODED_SOURCE: SourceRef = source("ai", `batch1:ch${encodedBatch1.chapter}`)
 
 const chapterById = new Map(chapters.map((c) => [c.id, c]))
+
+/** Phase 6 — provenance for an encoded batch, derived from its registry entry. */
+function batchSource(batch: EncodedBatch): SourceRef {
+  return source("ai", `${batch.id}:ch${batch.data.chapter}`)
+}
 
 function chapterIdFor(concept: Concept): string {
   if (concept.chapterId && chapterById.has(concept.chapterId)) {
@@ -24,6 +29,15 @@ function sourceFor(concept: Concept): SourceRef {
   if (concept.source) return concept.source
   return chapterById.get(chapterIdFor(concept))?.source ?? FALLBACK_SOURCE
 }
+
+const encodedConcepts: { concept: EncodedConcept; chapterId: string; source: SourceRef }[] =
+  encodedBatches.flatMap((batch) =>
+    batch.data.concepts.map((concept) => ({
+      concept,
+      chapterId: batch.chapterId,
+      source: batchSource(batch),
+    }))
+  )
 
 function buildExamples(): Example[] {
   const examples: Example[] = []
@@ -42,7 +56,7 @@ function buildExamples(): Example[] {
   }
 
   const runtimeIds = new Set(concepts.map((c) => c.id))
-  for (const encoded of encodedBatch1.concepts) {
+  for (const { concept: encoded, source: src } of encodedConcepts) {
     if (runtimeIds.has(encoded.id)) continue
     encoded.examples.forEach((ex, i) => {
       examples.push({
@@ -50,7 +64,7 @@ function buildExamples(): Example[] {
         conceptId: encoded.id,
         french: ex.french,
         english: ex.english,
-        source: ENCODED_SOURCE,
+        source: src,
       })
     })
   }
@@ -74,8 +88,8 @@ for (const example of examples) {
   exampleIdsByConcept.set(example.conceptId, list)
 }
 
-const dependenciesById = new Map(
-  encodedBatch1.concepts.map((c) => [c.id, c.dependencies])
+const dependenciesById = new Map<string, string[]>(
+  encodedConcepts.map(({ concept }) => [concept.id, concept.dependencies])
 )
 
 const runtimeConcepts: DomainConcept[] = concepts.map((concept) => {
@@ -100,22 +114,22 @@ const runtimeConcepts: DomainConcept[] = concepts.map((concept) => {
 const runtimeIds = new Set(concepts.map((c) => c.id))
 
 /** Encoded concepts with no runtime counterpart, kept for future generators. */
-const pendingConcepts: DomainConcept[] = encodedBatch1.concepts
-  .filter((c) => !runtimeIds.has(c.id))
-  .map((encoded) => ({
+const pendingConcepts: DomainConcept[] = encodedConcepts
+  .filter(({ concept }) => !runtimeIds.has(concept.id))
+  .map(({ concept: encoded, chapterId, source: src }) => ({
     id: encoded.id,
     name: encoded.name,
     explanation: encoded.explanation,
     difficulty: encoded.difficulty,
     kind: "translate",
-    chapterId: "ch-aller-faire",
-    ruleIds: ruleIdsByChapter.get("ch-aller-faire") ?? [],
+    chapterId,
+    ruleIds: ruleIdsByChapter.get(chapterId) ?? [],
     exampleIds: exampleIdsByConcept.get(encoded.id) ?? [],
     exerciseTypes: [],
     trainable: encoded.trainable,
     dependencies: encoded.dependencies,
     runtime: false,
-    source: ENCODED_SOURCE,
+    source: src,
   }))
 
 export const catalog: Catalog = {

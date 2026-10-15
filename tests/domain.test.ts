@@ -4,7 +4,8 @@ import { catalog, domainConcepts } from "../src/domain/catalog"
 import { validateCatalog } from "../src/domain/validate"
 import { EXERCISE_TYPES } from "../src/domain/exerciseType"
 import { concepts } from "../src/grammar/concepts"
-import { encodedBatch1 } from "../src/content/encoded/batch1"
+import { encodedBatches } from "../src/content/encoded"
+import { validateEncodedChapter } from "../src/ai/encodedConcept"
 
 test("catalog validates cleanly", () => {
   const result = validateCatalog(catalog)
@@ -26,9 +27,9 @@ test("every runtime concept is expressible in the catalog", () => {
   }
 })
 
-test("the runtime pool is exactly the 23 schedulable concepts", () => {
+test("the runtime pool is exactly the 31 schedulable concepts", () => {
   const schedulable = domainConcepts.filter((c) => c.trainable)
-  assert.equal(schedulable.length, 23)
+  assert.equal(schedulable.length, 31)
 })
 
 test("every chapter has at least one concept", () => {
@@ -38,10 +39,27 @@ test("every chapter has at least one concept", () => {
   }
 })
 
-test("batch1 concepts reconcile to existing runtime ids", () => {
+test("every encoded batch validates against the encoding shape", () => {
+  for (const batch of encodedBatches) {
+    const result = validateEncodedChapter(batch.data)
+    assert.ok(
+      result.ok,
+      `batch ${batch.id} failed validation: ${
+        result.ok ? "" : result.errors.join("; ")
+      }`
+    )
+  }
+})
+
+test("every encoded batch concept reconciles to a runtime id", () => {
   const runtimeIds = new Set(concepts.map((c) => c.id))
-  for (const encoded of encodedBatch1.concepts) {
-    assert.ok(runtimeIds.has(encoded.id), `batch1 ${encoded.id} is not runtime`)
+  for (const batch of encodedBatches) {
+    for (const encoded of batch.data.concepts) {
+      assert.ok(
+        runtimeIds.has(encoded.id),
+        `${batch.id} ${encoded.id} is not runtime`
+      )
+    }
   }
 })
 
