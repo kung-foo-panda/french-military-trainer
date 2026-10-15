@@ -83,7 +83,7 @@ test("upgrades an older snapshot in place", () => {
 
   const repo = new LocalProgressRepository(storage)
   assert.equal(repo.loadConceptStates().length, 1)
-  assert.equal(repo.loadSnapshot().version, 2)
+  assert.equal(repo.loadSnapshot().version, 3)
 })
 
 test("keeps unknown concept ids across a save/load cycle", () => {
@@ -116,4 +116,50 @@ test("reset metrics when the stored day differs", () => {
 
   assert.equal(repo.loadMetrics("2026-01-01").sessions.length, 1)
   assert.equal(repo.loadMetrics("2026-01-02").sessions.length, 0)
+})
+
+function day(date: string, startedAt: number) {
+  return {
+    date,
+    sessions: [
+      {
+        startedAt,
+        durationMs: 0,
+        correct: 1,
+        incorrect: 0,
+        totalTimeMs: 0,
+        conceptStats: {},
+      },
+    ],
+  }
+}
+
+test("accumulates a multi-day history, newest first, upserting per day", () => {
+  const storage = new MemoryStorage()
+  const repo = new LocalProgressRepository(storage)
+
+  repo.saveMetrics(day("2026-01-01", 1))
+  repo.saveMetrics(day("2026-01-03", 3))
+  repo.saveMetrics(day("2026-01-02", 2))
+
+  assert.deepEqual(
+    repo.loadHistory().map((m) => m.date),
+    ["2026-01-03", "2026-01-02", "2026-01-01"]
+  )
+
+  repo.saveMetrics({
+    ...day("2026-01-02", 9),
+    sessions: [...day("2026-01-02", 2).sessions, day("2026-01-02", 9).sessions[0]],
+  })
+  assert.equal(repo.loadMetrics("2026-01-02").sessions.length, 2)
+  assert.equal(repo.loadHistory().length, 3)
+})
+
+test("migrates a legacy single-day metrics record into history", () => {
+  const storage = new MemoryStorage()
+  storage.setItem(LEGACY_KEYS.metrics, JSON.stringify(day("2026-01-01", 1)))
+
+  const repo = new LocalProgressRepository(storage)
+  assert.equal(repo.loadHistory().length, 1)
+  assert.equal(repo.loadHistory()[0].date, "2026-01-01")
 })

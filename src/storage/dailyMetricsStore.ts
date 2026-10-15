@@ -9,3 +9,8 @@ export function loadDailyMetrics(date: string): DailyMetrics {
 export function saveDailyMetrics(metrics: DailyMetrics) {
   progressRepository()?.saveMetrics(metrics)
 }
+
+/** Every practiced day, newest first (Phase 5 progress history). */
+export function loadMetricsHistory(): DailyMetrics[] {
+  return progressRepository()?.loadHistory() ?? []
+}

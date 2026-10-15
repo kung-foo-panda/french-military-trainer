@@ -15,8 +15,10 @@ export interface ProgressRepository {
   saveConceptStates(states: ConceptState[]): void
   loadEnforcement(): EnforcementRecord
   saveEnforcement(record: EnforcementRecord): void
-  /** Metrics for `date`, or an empty record when the stored day differs. */
+  /** Metrics for `date`, or an empty record when that day has no practice. */
   loadMetrics(date: string): DailyMetrics
   saveMetrics(metrics: DailyMetrics): void
+  /** Every recorded day, newest first. Phase 5 progress history. */
+  loadHistory(): DailyMetrics[]
   clear(): void
 }

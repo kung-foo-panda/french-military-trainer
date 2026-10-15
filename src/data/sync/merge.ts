@@ -34,22 +34,29 @@ export function mergeEnforcement(
   return local.lastActiveDate > remote.lastActiveDate ? local : remote
 }
 
-function mergeMetrics(
-  local: DailyMetrics | null,
-  remote: DailyMetrics | null
-): DailyMetrics | null {
-  if (!local) return remote
-  if (!remote) return local
-  if (local.date !== remote.date) return local.date > remote.date ? local : remote
-
+function mergeDay(a: DailyMetrics, b: DailyMetrics): DailyMetrics {
   const byStart = new Map<number, SessionMetric>()
-  for (const session of [...local.sessions, ...remote.sessions]) {
+  for (const session of [...a.sessions, ...b.sessions]) {
     byStart.set(session.startedAt, session)
   }
   return {
-    date: local.date,
-    sessions: [...byStart.values()].sort((a, b) => a.startedAt - b.startedAt),
+    date: a.date,
+    sessions: [...byStart.values()].sort((x, y) => x.startedAt - y.startedAt),
   }
+}
+
+/** Union of days by date; same-day sessions merge without duplicates. */
+export function mergeHistory(
+  local: DailyMetrics[],
+  remote: DailyMetrics[]
+): DailyMetrics[] {
+  const byDate = new Map<string, DailyMetrics>()
+  for (const day of local) byDate.set(day.date, day)
+  for (const day of remote) {
+    const existing = byDate.get(day.date)
+    byDate.set(day.date, existing ? mergeDay(existing, day) : day)
+  }
+  return [...byDate.values()].sort((a, b) => b.date.localeCompare(a.date))
 }
 
 /** Deterministic two-way merge of a local and a remote snapshot. */
@@ -63,6 +70,6 @@ export function mergeSnapshots(
     version: PROGRESS_SCHEMA_VERSION,
     conceptStates: mergeConceptStates(local.conceptStates, remote.conceptStates),
     enforcement: mergeEnforcement(local.enforcement, remote.enforcement),
-    metrics: mergeMetrics(local.metrics, remote.metrics),
+    history: mergeHistory(local.history, remote.history),
   }
 }

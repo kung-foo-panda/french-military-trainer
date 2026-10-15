@@ -5,8 +5,8 @@ import {
 import { emptyDailyMetrics, type DailyMetrics } from "../core/dailyMetrics"
 import type { ConceptState } from "../types/conceptState"
 
-/** Phase 2 — bump when the persisted snapshot shape changes. */
-export const PROGRESS_SCHEMA_VERSION = 2
+/** Phase 5 — bump when the persisted snapshot shape changes. */
+export const PROGRESS_SCHEMA_VERSION = 3
 
 /** Single snapshot key; supersedes the three legacy per-store keys. */
 export const PROGRESS_KEY = "french_trainer_progress"
@@ -21,7 +21,8 @@ export type ProgressSnapshot = {
   version: number
   conceptStates: ConceptState[]
   enforcement: EnforcementRecord
-  metrics: DailyMetrics | null
+  /** One metrics record per practiced day (Phase 5 history, newest first). */
+  history: DailyMetrics[]
 }
 
 export function emptySnapshot(): ProgressSnapshot {
@@ -29,7 +30,7 @@ export function emptySnapshot(): ProgressSnapshot {
     version: PROGRESS_SCHEMA_VERSION,
     conceptStates: [],
     enforcement: { ...DEFAULT_ENFORCEMENT },
-    metrics: null,
+    history: [],
   }
 }
 

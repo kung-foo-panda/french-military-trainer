@@ -37,7 +37,7 @@ function snapshot(partial: Partial<ProgressSnapshot>): ProgressSnapshot {
     version: PROGRESS_SCHEMA_VERSION,
     conceptStates: [],
     enforcement: { ...DEFAULT_ENFORCEMENT },
-    metrics: null,
+    history: [],
     ...partial,
   }
 }
@@ -83,23 +83,31 @@ test("mergeSnapshots merges same-day sessions without duplicates", () => {
     conceptStats: {},
   })
   const local = snapshot({
-    metrics: { date: "2026-03-01", sessions: [session(100)] },
+    history: [{ date: "2026-03-01", sessions: [session(100)] }],
   })
   const remote = snapshot({
-    metrics: { date: "2026-03-01", sessions: [session(100), session(200)] },
+    history: [{ date: "2026-03-01", sessions: [session(100), session(200)] }],
   })
   const merged = mergeSnapshots(local, remote)
-  assert.equal(merged.metrics!.sessions.length, 2)
+  assert.equal(merged.history.length, 1)
   assert.deepEqual(
-    merged.metrics!.sessions.map((s) => s.startedAt),
+    merged.history[0].sessions.map((s) => s.startedAt),
     [100, 200]
   )
 })
 
-test("mergeSnapshots keeps the newer metrics day", () => {
-  const local = snapshot({ metrics: { date: "2026-03-01", sessions: [] } })
-  const remote = snapshot({ metrics: { date: "2026-03-05", sessions: [] } })
-  assert.equal(mergeSnapshots(local, remote).metrics!.date, "2026-03-05")
+test("mergeSnapshots unions history days, newest first", () => {
+  const local = snapshot({ history: [{ date: "2026-03-01", sessions: [] }] })
+  const remote = snapshot({
+    history: [
+      { date: "2026-03-05", sessions: [] },
+      { date: "2026-02-01", sessions: [] },
+    ],
+  })
+  assert.deepEqual(
+    mergeSnapshots(local, remote).history.map((d) => d.date),
+    ["2026-03-05", "2026-03-01", "2026-02-01"]
+  )
 })
 
 test("ProgressSync.pull merges, persists locally, and pushes remotely", async () => {

@@ -4,8 +4,8 @@ import { useState } from "react"
 import { schedulableConceptIds } from "@/grammar/concepts"
 import { loadConceptStates, mergeConceptStates } from "@/storage/progressStore"
 import { loadEnforcementRecord } from "@/storage/enforcementStore"
-import { loadDailyMetrics } from "@/storage/dailyMetricsStore"
-import { dateKey, type EnforcementRecord } from "@/core/dailyEnforcement"
+import { loadMetricsHistory } from "@/storage/dailyMetricsStore"
+import { type EnforcementRecord } from "@/core/dailyEnforcement"
 import { rankConceptStates } from "@/core/scheduler"
 import type { ConceptState } from "@/types/conceptState"
 import type { DailyMetrics } from "@/core/dailyMetrics"
@@ -18,7 +18,7 @@ type Snapshot = {
   ranking: ConceptState[]
   overdue: string[]
   enforcement: EnforcementRecord
-  metrics: DailyMetrics
+  history: DailyMetrics[]
   loadedAt: number
 }
 
@@ -27,7 +27,6 @@ export default function DevPage() {
   const isProduction = process.env.NODE_ENV === "production"
 
   function load() {
-    const today = dateKey(new Date())
     const states = mergeConceptStates(
       loadConceptStates(),
       schedulableConceptIds
@@ -38,7 +37,7 @@ export default function DevPage() {
       ranking: rankConceptStates(states, now),
       overdue: states.filter((s) => s.nextReview <= now).map((s) => s.id),
       enforcement: loadEnforcementRecord(),
-      metrics: loadDailyMetrics(today),
+      history: loadMetricsHistory(),
       loadedAt: now,
     })
   }
@@ -97,10 +96,10 @@ export default function DevPage() {
 
               <Card>
                 <h2 className="mb-2 text-sm font-medium text-ink-soft">
-                  Daily metrics
+                  Daily metrics history ({snapshot.history.length} day(s))
                 </h2>
                 <pre className="overflow-x-auto rounded-lg bg-surface-2 p-3 text-xs text-ink">
-                  {JSON.stringify(snapshot.metrics, null, 2)}
+                  {JSON.stringify(snapshot.history, null, 2)}
                 </pre>
               </Card>
 

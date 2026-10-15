@@ -62,13 +62,22 @@ export class LocalProgressRepository implements ProgressRepository {
   }
 
   loadMetrics(date: string): DailyMetrics {
-    const metrics = this.ensure().metrics
-    if (metrics && metrics.date === date) return metrics
-    return { date, sessions: [] }
+    return (
+      this.ensure().history.find((m) => m.date === date) ?? {
+        date,
+        sessions: [],
+      }
+    )
   }
 
   saveMetrics(metrics: DailyMetrics): void {
-    this.write({ ...this.ensure(), metrics })
+    const snapshot = this.ensure()
+    const history = snapshot.history.filter((m) => m.date !== metrics.date)
+    this.write({ ...snapshot, history: [...history, metrics] })
+  }
+
+  loadHistory(): DailyMetrics[] {
+    return [...this.ensure().history].sort((a, b) => b.date.localeCompare(a.date))
   }
 
   clear(): void {
@@ -114,12 +123,17 @@ export class LocalProgressRepository implements ProgressRepository {
       ? p.enforcement
       : { ...DEFAULT_ENFORCEMENT }
     const metrics = isDailyMetrics(p.metrics) ? p.metrics : null
+    const history = Array.isArray(p.history)
+      ? p.history.filter(isDailyMetrics)
+      : metrics
+        ? [metrics]
+        : []
 
     return {
       version: PROGRESS_SCHEMA_VERSION,
       conceptStates,
       enforcement,
-      metrics,
+      history,
     }
   }
 
@@ -138,7 +152,7 @@ export class LocalProgressRepository implements ProgressRepository {
       version: PROGRESS_SCHEMA_VERSION,
       conceptStates,
       enforcement: enforcement ?? { ...DEFAULT_ENFORCEMENT },
-      metrics: metrics ?? null,
+      history: metrics ? [metrics] : [],
     }
   }
 

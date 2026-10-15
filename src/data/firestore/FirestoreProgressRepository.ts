@@ -20,7 +20,11 @@ function coerce(data: unknown): ProgressSnapshot | null {
     enforcement: isEnforcementRecord(d.enforcement)
       ? d.enforcement
       : { ...DEFAULT_ENFORCEMENT },
-    metrics: isDailyMetrics(d.metrics) ? d.metrics : null,
+    history: Array.isArray(d.history)
+      ? d.history.filter(isDailyMetrics)
+      : isDailyMetrics(d.metrics)
+        ? [d.metrics]
+        : [],
   }
 }
 
