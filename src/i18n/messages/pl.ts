@@ -208,6 +208,9 @@ export const pl: Messages = {
   "placeholder.futur_proche": "np. je vais parler",
   "placeholder.default": "Twoja odpowiedź",
 
+  // — Answer input aids —
+  "input.specialChars": "Francuskie znaki specjalne",
+
   // — Library —
   "library.heading": "Biblioteka gramatyki",
   "library.intro":

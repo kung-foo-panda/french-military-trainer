@@ -45,6 +45,7 @@ import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Stat } from "@/components/ui/Stat"
+import { SpecialCharBar } from "@/components/ui/SpecialCharBar"
 import { TrainingPlanPicker } from "@/components/TrainingPlanPicker"
 import { useT } from "@/i18n/LocaleProvider"
 import type { MessageKey } from "@/i18n"
@@ -416,23 +417,33 @@ export default function TrainPage() {
             </div>
           ) : (
             <form
-              className="flex flex-wrap items-center gap-3"
+              className="space-y-3"
               onSubmit={(e) => {
                 e.preventDefault()
                 checkAnswer()
               }}
             >
-              <input
-                ref={inputRef}
-                autoFocus
+              <div className="flex flex-wrap items-center gap-3">
+                <input
+                  ref={inputRef}
+                  autoFocus
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  placeholder={
+                    placeholderKey
+                      ? t(placeholderKey)
+                      : t("placeholder.default")
+                  }
+                  className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                />
+                <Button type="submit">{t("train.submit")}</Button>
+              </div>
+              <SpecialCharBar
                 value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                placeholder={
-                  placeholderKey ? t(placeholderKey) : t("placeholder.default")
-                }
-                className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                onChange={setAnswer}
+                inputRef={inputRef}
+                label={t("input.specialChars")}
               />
-              <Button type="submit">{t("train.submit")}</Button>
             </form>
           )}
 

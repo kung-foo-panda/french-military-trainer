@@ -206,6 +206,9 @@ export const en = {
   "placeholder.futur_proche": "e.g. je vais parler",
   "placeholder.default": "Your answer",
 
+  // — Answer input aids —
+  "input.specialChars": "French special characters",
+
   // — Library —
   "library.heading": "Grammar Library",
   "library.intro":

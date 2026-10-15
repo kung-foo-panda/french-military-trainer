@@ -208,6 +208,9 @@ export const de: Messages = {
   "placeholder.futur_proche": "z. B. je vais parler",
   "placeholder.default": "Deine Antwort",
 
+  // — Answer input aids —
+  "input.specialChars": "Französische Sonderzeichen",
+
   // — Library —
   "library.heading": "Grammatik-Bibliothek",
   "library.intro":
