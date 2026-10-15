@@ -56,7 +56,8 @@ export function generateRegularQuestion(concept: RegularConcept): Question {
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Conjugate: ${form.subject} + ${infinitive}`,
+    promptKey: "prompt.conjugate",
+    promptParams: { subject: form.subject, phrase: infinitive },
     french: infinitive,
     answers: [conjugated],
     mode: "conjugate",

@@ -15,7 +15,8 @@ export function generateAuxiliaryIntroQuestion(
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Which auxiliary for "${infinitive}"?`,
+    promptKey: "prompt.whichAuxiliary",
+    promptParams: { phrase: infinitive },
     french: infinitive,
     answers: ["avoir"],
     mode: "auxiliary",

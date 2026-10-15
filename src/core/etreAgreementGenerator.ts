@@ -25,7 +25,8 @@ export function generateEtreAgreementQuestion(
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Passé composé (être): ${subject} + ${infinitive}`,
+    promptKey: "prompt.etrePc",
+    promptParams: { subject, phrase: infinitive },
     french: infinitive,
     answers: [conjugated],
     mode: "etre_pc",

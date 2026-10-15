@@ -1,28 +1,29 @@
 import { isMastered } from "./escalation"
 import { WEAKNESS_THRESHOLD } from "./weakness"
+import type { MessageKey } from "../i18n"
 import type { ConceptState } from "../types/conceptState"
 import type { DailyMetrics } from "./dailyMetrics"
 
 export type MasteryBand = "new" | "fragile" | "developing" | "solid" | "mastered"
 
-type BandDef = { band: MasteryBand; label: string; min: number }
+type BandDef = { band: MasteryBand; labelKey: MessageKey; min: number }
 
 /** Strength cut-offs, highest first so `find` returns the best fit. */
 export const MASTERY_BANDS: BandDef[] = [
-  { band: "mastered", label: "Mastered", min: 90 },
-  { band: "solid", label: "Solid", min: 75 },
-  { band: "developing", label: "Developing", min: 50 },
-  { band: "fragile", label: "Fragile", min: 25 },
-  { band: "new", label: "New", min: 0 },
+  { band: "mastered", labelKey: "band.mastered", min: 90 },
+  { band: "solid", labelKey: "band.solid", min: 75 },
+  { band: "developing", labelKey: "band.developing", min: 50 },
+  { band: "fragile", labelKey: "band.fragile", min: 25 },
+  { band: "new", labelKey: "band.new", min: 0 },
 ]
 
 export function masteryBand(strength: number): MasteryBand {
   return (MASTERY_BANDS.find((b) => strength >= b.min) ?? MASTERY_BANDS[MASTERY_BANDS.length - 1]).band
 }
 
-export function masteryLabel(strength: number): string {
+export function masteryLabelKey(strength: number): MessageKey {
   return (
-    MASTERY_BANDS.find((b) => strength >= b.min)?.label ?? "New"
+    MASTERY_BANDS.find((b) => strength >= b.min)?.labelKey ?? "band.new"
   )
 }
 
@@ -85,13 +86,17 @@ export function weakestFirst(states: ConceptState[]): ConceptState[] {
   )
 }
 
-export type BandCount = { band: MasteryBand; label: string; count: number }
+export type BandCount = {
+  band: MasteryBand
+  labelKey: MessageKey
+  count: number
+}
 
 /** Distribution of states across mastery bands (non-empty bands, best first). */
 export function bandDistribution(states: ConceptState[]): BandCount[] {
   return MASTERY_BANDS.map((def) => ({
     band: def.band,
-    label: def.label,
+    labelKey: def.labelKey,
     count: states.filter((s) => masteryBand(s.strength) === def.band).length,
   })).filter((entry) => entry.count > 0)
 }

@@ -19,6 +19,7 @@ import {
   type UserCredential,
 } from "firebase/auth"
 import { firebaseAuth, isFirebaseConfigured } from "@/lib/firebase"
+import { useT } from "@/i18n/LocaleProvider"
 import { toAuthUser, type AuthUser } from "./authTypes"
 
 type AuthContextValue = {
@@ -34,8 +35,9 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-function messageOf(err: unknown): string {
-  return err instanceof Error ? err.message : "Something went wrong"
+/** Raw Firebase messages pass through untranslated; only the fallback is localized. */
+function messageOf(err: unknown, fallback: string): string {
+  return err instanceof Error ? err.message : fallback
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -43,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(() => isFirebaseConfigured())
   const [error, setError] = useState<string | null>(null)
   const configured = isFirebaseConfigured()
+  const t = useT()
 
   useEffect(() => {
     if (!configured) return
@@ -59,10 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await action()
     } catch (err) {
-      setError(messageOf(err))
+      setError(messageOf(err, t("auth.error")))
       throw err
     }
-  }, [])
+  }, [t])
 
   const signInEmail = useCallback(
     (email: string, password: string) =>

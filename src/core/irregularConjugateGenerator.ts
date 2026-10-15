@@ -28,7 +28,8 @@ export function generateIrregularQuestion(
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Conjugate: ${form.subject} + ${infinitive}`,
+    promptKey: "prompt.conjugate",
+    promptParams: { subject: form.subject, phrase: infinitive },
     french: infinitive,
     answers: [form.form],
     mode: "conjugate",

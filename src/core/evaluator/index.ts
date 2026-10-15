@@ -38,7 +38,7 @@ export function evaluateAnswer(
   const normalizedCorrect = correctAnswers.map((c) => normalize(c, meta.strict))
 
   if (normalizedCorrect.includes(normalizedUser)) {
-    return { correct: true, message: "Correct!", errorType: "correct" }
+    return { correct: true, messageKey: "eval.correct", errorType: "correct" }
   }
 
   for (const correct of normalizedCorrect) {
@@ -46,7 +46,7 @@ export function evaluateAnswer(
     if (parts.length >= 2) {
       const verbOnly = parts.slice(1).join(" ")
       if (normalizedUser === verbOnly) {
-        return { correct: true, message: "Correct!", errorType: "correct" }
+        return { correct: true, messageKey: "eval.correct", errorType: "correct" }
       }
     }
   }
@@ -58,5 +58,9 @@ export function evaluateAnswer(
     }
   }
 
-  return { correct: false, message: "Not correct", errorType: "wrong_answer" }
+  return {
+    correct: false,
+    messageKey: "eval.wrongAnswer",
+    errorType: "wrong_answer",
+  }
 }

@@ -20,20 +20,20 @@ export function evaluateEtrePc(
   if (!user.includes(aux)) {
     return {
       correct: false,
-      message: "Wrong auxiliary",
+      messageKey: "eval.wrongAuxiliary",
       errorType: "auxiliary_error",
     }
   }
   if (tail === otherTail) {
     return {
       correct: false,
-      message: "Agreement error",
+      messageKey: "eval.agreementError",
       errorType: "agreement_error",
     }
   }
   return {
     correct: false,
-    message: "Wrong past participle",
+    messageKey: "eval.wrongParticiple",
     errorType: "participle_error",
   }
 }

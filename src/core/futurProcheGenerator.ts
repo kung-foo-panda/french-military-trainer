@@ -16,7 +16,8 @@ export function generateFuturProcheQuestion(
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Futur proche: ${aller.subject} + ${infinitive}`,
+    promptKey: "prompt.futurProche",
+    promptParams: { subject: aller.subject, phrase: infinitive },
     french: infinitive,
     answers: [`${aller.form} ${infinitive}`],
     mode: "futur_proche",

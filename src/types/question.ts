@@ -1,3 +1,5 @@
+import type { MessageKey, TranslateParams } from "../i18n"
+
 export type QuestionMode =
   | "translate"
   | "conjugate"
@@ -13,7 +15,12 @@ export type QuestionMode =
 export type Question = {
   conceptId: string
   concept: string
-  question: string
+  /**
+   * Drill prompt, stored as a catalogue key + params so the UI renders it in
+   * the active locale ({phrase}/{subject} always carry French content).
+   */
+  promptKey: MessageKey
+  promptParams?: TranslateParams
   /** Shown cue: French phrase (translate) or infinitive (conjugate) */
   french: string
   answers: string[]

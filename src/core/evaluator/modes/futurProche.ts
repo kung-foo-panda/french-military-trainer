@@ -27,7 +27,7 @@ export function evaluateFuturProche(
 
   return {
     correct: false,
-    message: "Wrong form of aller",
+    messageKey: "eval.wrongAller",
     errorType: "auxiliary_error",
   }
 }

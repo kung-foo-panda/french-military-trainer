@@ -27,25 +27,25 @@ export function evaluateNegation(
   const pasOk = /(?:^|\s)pas(?:\s|$)/.test(user)
 
   if (auxiliaryOk && participleOk && neOk && pasOk) {
-    return { correct: true, message: "Correct!", errorType: "correct" }
+    return { correct: true, messageKey: "eval.correct", errorType: "correct" }
   }
   if (!participleOk) {
     return {
       correct: false,
-      message: "Wrong past participle",
+      messageKey: "eval.wrongParticiple",
       errorType: "participle_error",
     }
   }
   if (!auxiliaryOk) {
     return {
       correct: false,
-      message: "Wrong auxiliary",
+      messageKey: "eval.wrongAuxiliary",
       errorType: "auxiliary_error",
     }
   }
   return {
     correct: false,
-    message: "Negation missing (ne … pas)",
+    messageKey: "eval.negationMissing",
     errorType: "negation_error",
   }
 }

@@ -18,6 +18,8 @@ import { buttonClass } from "@/components/ui/Button"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Stat } from "@/components/ui/Stat"
 import { BarChart } from "@/components/ui/BarChart"
+import { useLocale, useT } from "@/i18n/LocaleProvider"
+import { localePath } from "@/i18n"
 
 const CONCEPT_BY_ID = new Map(concepts.map((c) => [c.id, c]))
 
@@ -40,40 +42,52 @@ function build() {
 export default function DashboardPage() {
   const [view] = useState(build)
   const { enforcement, series, summary, weak } = view
+  const locale = useLocale()
+  const t = useT()
 
   return (
     <div className="space-y-8">
       <header className="space-y-3">
-        <Badge tone="accent">Spaced-repetition trainer</Badge>
+        <Badge tone="accent">{t("dashboard.badge")}</Badge>
         <h1 className="text-3xl font-semibold tracking-tight">
-          Bonjour. Ready to train?
+          {t("dashboard.heading")}
         </h1>
         <p className="max-w-2xl text-sm text-ink-soft">
-          Each session blends due reviews, your weakest concepts, and new
-          material. Answer carefully — wrong or slow items come back sooner.
+          {t("dashboard.intro")}
         </p>
         <div className="flex flex-wrap gap-3 pt-1">
-          <Link href="/train" className={buttonClass("primary")}>
-            Start training
+          <Link
+            href={localePath(locale, "/train")}
+            className={buttonClass("primary")}
+          >
+            {t("dashboard.startTraining")}
           </Link>
-          <Link href="/progress" className={buttonClass("secondary")}>
-            View progress
+          <Link
+            href={localePath(locale, "/progress")}
+            className={buttonClass("secondary")}
+          >
+            {t("dashboard.viewProgress")}
           </Link>
         </div>
       </header>
 
       <div className="grid gap-3 sm:grid-cols-4">
         <Stat
-          label="Today"
+          label={t("dashboard.stat.today")}
           value={`${enforcement.completedToday}/${enforcement.targetToday}`}
-          hint="Exercises completed"
+          hint={t("dashboard.stat.todayHint")}
         />
-        <Stat label="Streak" value={`${enforcement.streakDays}d`} />
-        <Stat label="Due today" value={summary.dueToday} />
         <Stat
-          label="Weak"
+          label={t("dashboard.stat.streak")}
+          value={`${enforcement.streakDays}${t("unit.dayShort")}`}
+        />
+        <Stat label={t("dashboard.stat.dueToday")} value={summary.dueToday} />
+        <Stat
+          label={t("dashboard.stat.weak")}
           value={summary.weak}
-          hint={`Avg strength ${summary.avgStrength.toFixed(0)}%`}
+          hint={t("dashboard.stat.weakHint", {
+            pct: summary.avgStrength.toFixed(0),
+          })}
         />
       </div>
 
@@ -81,18 +95,16 @@ export default function DashboardPage() {
         <ProgressBar
           value={enforcement.completedToday}
           max={enforcement.targetToday}
-          label="Today’s plan"
+          label={t("dashboard.todayPlan")}
         />
         {enforcement.skipDebt && (
-          <p className="text-xs text-warn">
-            Yesterday was missed — today’s target is raised to 40.
-          </p>
+          <p className="text-xs text-warn">{t("dashboard.skipDebt")}</p>
         )}
       </Card>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="space-y-3">
-          <h2 className="font-medium">Where you’re weakest</h2>
+          <h2 className="font-medium">{t("dashboard.weakest")}</h2>
           {weak.length > 0 ? (
             <ul className="space-y-3">
               {weak.map((state) => (
@@ -110,33 +122,35 @@ export default function DashboardPage() {
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-ink-soft">
-              No weak spots right now — keep the streak going.
-            </p>
+            <p className="text-sm text-ink-soft">{t("dashboard.noWeak")}</p>
           )}
           <Link
-            href="/progress"
+            href={localePath(locale, "/progress")}
             className="inline-block text-sm font-medium text-accent-strong"
           >
-            See full breakdown →
+            {t("dashboard.seeBreakdown")}
           </Link>
         </Card>
 
         <Card className="space-y-3">
-          <h2 className="font-medium">Accuracy — last 7 days</h2>
+          <h2 className="font-medium">{t("dashboard.accuracy7")}</h2>
           {series.length > 0 ? (
             <BarChart
               points={series.map((p) => ({
                 label: p.date.slice(5),
                 value: p.accuracy,
-                hint: `${p.correct}/${p.answers} correct`,
+                hint: t("dashboard.correctHint", {
+                  correct: p.correct,
+                  answers: p.answers,
+                }),
               }))}
               max={1}
               formatValue={(v) => `${(v * 100).toFixed(0)}%`}
+              emptyLabel={t("chart.noData")}
             />
           ) : (
             <p className="text-sm text-ink-soft">
-              Finish a session to start tracking your accuracy.
+              {t("dashboard.accuracyEmpty")}
             </p>
           )}
         </Card>
@@ -144,21 +158,21 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card>
-          <h2 className="font-medium">Train</h2>
+          <h2 className="font-medium">{t("dashboard.trainTitle")}</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Mixed drills tuned to your current strengths and gaps.
+            {t("dashboard.trainBody")}
           </p>
         </Card>
         <Card>
-          <h2 className="font-medium">Library</h2>
+          <h2 className="font-medium">{t("dashboard.libraryTitle")}</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Every concept with a plain-language explanation.
+            {t("dashboard.libraryBody")}
           </p>
         </Card>
         <Card>
-          <h2 className="font-medium">Progress</h2>
+          <h2 className="font-medium">{t("dashboard.progressTitle")}</h2>
           <p className="mt-1 text-sm text-ink-soft">
-            Mastery, weak spots, and your practice history.
+            {t("dashboard.progressBody")}
           </p>
         </Card>
       </div>

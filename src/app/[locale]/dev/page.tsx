@@ -12,6 +12,7 @@ import type { DailyMetrics } from "@/core/dailyMetrics"
 import { Card } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
+import { useT } from "@/i18n/LocaleProvider"
 
 type Snapshot = {
   states: ConceptState[]
@@ -25,6 +26,7 @@ type Snapshot = {
 export default function DevPage() {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null)
   const isProduction = process.env.NODE_ENV === "production"
+  const t = useT()
 
   function load() {
     const states = mergeConceptStates(
@@ -46,29 +48,27 @@ export default function DevPage() {
     <div className="space-y-6">
       <header className="space-y-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">Diagnostics</h1>
-          <Badge tone="warn">Dev only</Badge>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {t("dev.heading")}
+          </h1>
+          <Badge tone="warn">{t("dev.badge")}</Badge>
         </div>
-        <p className="text-sm text-ink-soft">
-          Raw persisted state for debugging. Not part of the learner flow.
-        </p>
+        <p className="text-sm text-ink-soft">{t("dev.subtitle")}</p>
       </header>
 
       {isProduction ? (
         <Card>
-          <p className="text-sm text-ink-soft">
-            Diagnostics are disabled in production builds.
-          </p>
+          <p className="text-sm text-ink-soft">{t("dev.disabled")}</p>
         </Card>
       ) : (
         <>
-          <Button onClick={load}>Load current state</Button>
+          <Button onClick={load}>{t("dev.load")}</Button>
 
           {snapshot && (
             <div className="space-y-4">
               <Card>
                 <h2 className="mb-2 text-sm font-medium text-ink-soft">
-                  Enforcement
+                  {t("dev.enforcement")}
                 </h2>
                 <pre className="overflow-x-auto rounded-lg bg-surface-2 p-3 text-xs text-ink">
                   {JSON.stringify(snapshot.enforcement, null, 2)}
@@ -77,7 +77,7 @@ export default function DevPage() {
 
               <Card>
                 <h2 className="mb-2 text-sm font-medium text-ink-soft">
-                  Scheduler ranking ({snapshot.overdue.length} overdue)
+                  {t("dev.ranking", { count: snapshot.overdue.length })}
                 </h2>
                 <pre className="overflow-x-auto rounded-lg bg-surface-2 p-3 text-xs text-ink">
                   {JSON.stringify(
@@ -96,7 +96,7 @@ export default function DevPage() {
 
               <Card>
                 <h2 className="mb-2 text-sm font-medium text-ink-soft">
-                  Daily metrics history ({snapshot.history.length} day(s))
+                  {t("dev.history", { count: snapshot.history.length })}
                 </h2>
                 <pre className="overflow-x-auto rounded-lg bg-surface-2 p-3 text-xs text-ink">
                   {JSON.stringify(snapshot.history, null, 2)}
@@ -105,7 +105,7 @@ export default function DevPage() {
 
               <Card>
                 <h2 className="mb-2 text-sm font-medium text-ink-soft">
-                  Concept states
+                  {t("dev.states")}
                 </h2>
                 <pre className="overflow-x-auto rounded-lg bg-surface-2 p-3 text-xs text-ink">
                   {JSON.stringify(snapshot.states, null, 2)}

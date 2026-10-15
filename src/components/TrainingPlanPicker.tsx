@@ -14,6 +14,7 @@ import {
 } from "@/core/trainingPlan"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
+import { useT } from "@/i18n/LocaleProvider"
 
 const SCHEDULABLE = new Set(schedulableConceptIds)
 
@@ -80,6 +81,7 @@ export function TrainingPlanPicker({
 
   const poolSize = useMemo(() => resolveTrainingPool(plan).length, [plan])
   const focused = poolSize < schedulableConceptIds.length
+  const t = useT()
 
   const chapterSelected = (id: string) => plan.chapterIds?.includes(id) ?? false
   const typeSelected = (id: ExerciseTypeId) =>
@@ -90,10 +92,13 @@ export function TrainingPlanPicker({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium uppercase tracking-wide text-ink-faint">
-            Training focus
+            {t("plan.focus")}
           </span>
           <Badge tone={focused ? "accent" : "neutral"}>
-            {poolSize} of {schedulableConceptIds.length} concepts
+            {t("plan.poolCount", {
+              pool: poolSize,
+              total: schedulableConceptIds.length,
+            })}
           </Badge>
         </div>
         <Button
@@ -103,12 +108,12 @@ export function TrainingPlanPicker({
           disabled={!focused}
           onClick={() => onChange({ chapterIds: null, conceptIds: null, exerciseTypes: null })}
         >
-          Reset
+          {t("plan.reset")}
         </Button>
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs text-ink-soft">Chapters</p>
+        <p className="text-xs text-ink-soft">{t("plan.chapters")}</p>
         <div className="flex flex-wrap gap-2">
           {availableChapters.map((ch) => (
             <Chip
@@ -125,31 +130,28 @@ export function TrainingPlanPicker({
       </div>
 
       <div className="space-y-2">
-        <p className="text-xs text-ink-soft">Exercise types</p>
+        <p className="text-xs text-ink-soft">{t("plan.exerciseTypes")}</p>
         <div className="flex flex-wrap gap-2">
-          {availableTypes.map((t) => (
+          {availableTypes.map((type) => (
             <Chip
-              key={t.id}
-              active={typeSelected(t.id)}
+              key={type.id}
+              active={typeSelected(type.id)}
               onClick={() =>
                 onChange({
                   ...plan,
-                  exerciseTypes: toggle(plan.exerciseTypes, t.id) as
+                  exerciseTypes: toggle(plan.exerciseTypes, type.id) as
                     | ExerciseTypeId[]
                     | null,
                 })
               }
             >
-              {t.label}
+              {t(type.labelKey)}
             </Chip>
           ))}
         </div>
       </div>
 
-      <p className="text-xs text-ink-faint">
-        Selecting nothing trains everything. Changing the focus starts a new
-        session.
-      </p>
+      <p className="text-xs text-ink-faint">{t("plan.hint")}</p>
     </div>
   )
 }

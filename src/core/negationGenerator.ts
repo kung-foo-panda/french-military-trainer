@@ -16,7 +16,8 @@ export function generateNegationQuestion(
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Négation: ${aux.subject} / ${infinitive}`,
+    promptKey: "prompt.negation",
+    promptParams: { subject: aux.subject, phrase: infinitive },
     french: infinitive,
     answers: [phrase],
     mode: "negation",

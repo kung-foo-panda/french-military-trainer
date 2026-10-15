@@ -6,13 +6,15 @@ import { useSync } from "@/sync/useSync"
 import { Card } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
+import { useLocale, useT } from "@/i18n/LocaleProvider"
+import { LOCALE_META, type MessageKey } from "@/i18n"
 
-const SYNC_LABEL: Record<string, string> = {
-  offline: "Local only",
-  idle: "Not syncing",
-  syncing: "Syncing…",
-  synced: "Synced",
-  error: "Sync error",
+const SYNC_LABEL_KEY: Record<string, MessageKey> = {
+  offline: "account.sync.offline",
+  idle: "account.sync.idle",
+  syncing: "account.sync.syncing",
+  synced: "account.sync.synced",
+  error: "account.sync.error",
 }
 
 export function AccountPanel() {
@@ -27,6 +29,8 @@ export function AccountPanel() {
     signOut,
   } = useAuth()
   const { status, lastSyncedAt, syncNow } = useSync()
+  const locale = useLocale()
+  const t = useT()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -50,15 +54,10 @@ export function AccountPanel() {
     return (
       <Card className="space-y-3">
         <div className="flex items-center gap-2">
-          <h2 className="font-medium">Account</h2>
-          <Badge tone="warn">Not configured</Badge>
+          <h2 className="font-medium">{t("account.title")}</h2>
+          <Badge tone="warn">{t("account.notConfigured")}</Badge>
         </div>
-        <p className="text-sm text-ink-soft">
-          Firebase env vars are missing, so the app runs local-only and progress
-          stays on this device. Copy <code>.env.example</code> to{" "}
-          <code>.env.local</code>, add your project values, then enable Email/
-          Password and Google sign-in plus Firestore in the Firebase console.
-        </p>
+        <p className="text-sm text-ink-soft">{t("account.notConfiguredBody")}</p>
       </Card>
     )
   }
@@ -66,7 +65,7 @@ export function AccountPanel() {
   if (loading) {
     return (
       <Card>
-        <p className="text-sm text-ink-soft">Checking session…</p>
+        <p className="text-sm text-ink-soft">{t("account.checkingSession")}</p>
       </Card>
     )
   }
@@ -75,29 +74,35 @@ export function AccountPanel() {
     return (
       <Card className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-medium">Account</h2>
+          <h2 className="font-medium">{t("account.title")}</h2>
           <Badge tone={status === "error" ? "danger" : "success"}>
-            {SYNC_LABEL[status]}
+            {t(SYNC_LABEL_KEY[status])}
           </Badge>
         </div>
         <p className="text-sm text-ink">
-          Signed in as{" "}
+          {t("account.signedInAsPrefix")}{" "}
           <span className="font-medium">
             {user.displayName ?? user.email ?? user.uid}
           </span>
-          {user.email && user.displayName ? ` (${user.email})` : ""}
+          {user.email && user.displayName
+            ? t("account.emailSuffix", { email: user.email })
+            : ""}
         </p>
         <p className="text-xs text-ink-faint">
           {lastSyncedAt
-            ? `Last synced ${new Date(lastSyncedAt).toLocaleTimeString()}`
-            : "Not synced yet"}
+            ? t("account.lastSyncedAt", {
+                time: new Date(lastSyncedAt).toLocaleTimeString(
+                  LOCALE_META[locale].htmlLang
+                ),
+              })
+            : t("account.notSyncedYet")}
         </p>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" size="sm" onClick={syncNow}>
-            Sync now
+            {t("account.syncNow")}
           </Button>
           <Button variant="ghost" size="sm" onClick={() => void signOut()}>
-            Sign out
+            {t("account.signOut")}
           </Button>
         </div>
       </Card>
@@ -107,13 +112,15 @@ export function AccountPanel() {
   return (
     <Card className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="font-medium">{register ? "Create account" : "Sign in"}</h2>
+        <h2 className="font-medium">
+          {register ? t("account.createAccount") : t("account.signIn")}
+        </h2>
         <button
           type="button"
           onClick={() => setRegister((v) => !v)}
           className="text-xs font-medium text-accent-strong hover:underline"
         >
-          {register ? "Have an account? Sign in" : "New here? Create account"}
+          {register ? t("account.haveAccount") : t("account.newHere")}
         </button>
       </div>
 
@@ -123,7 +130,7 @@ export function AccountPanel() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
+          placeholder={t("account.emailPlaceholder")}
           className="w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
         />
         <input
@@ -132,17 +139,21 @@ export function AccountPanel() {
           minLength={6}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder={t("account.passwordPlaceholder")}
           className="w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
         />
         <Button type="submit" disabled={busy}>
-          {busy ? "Working…" : register ? "Create account" : "Sign in"}
+          {busy
+            ? t("account.working")
+            : register
+              ? t("account.createAccount")
+              : t("account.signIn")}
         </Button>
       </form>
 
       <div className="flex items-center gap-3 text-xs text-ink-faint">
         <span className="h-px flex-1 bg-border" />
-        or
+        {t("account.or")}
         <span className="h-px flex-1 bg-border" />
       </div>
 
@@ -151,7 +162,7 @@ export function AccountPanel() {
         onClick={() => void signInGoogle()}
         disabled={busy}
       >
-        Continue with Google
+        {t("account.continueWithGoogle")}
       </Button>
 
       {error && (

@@ -16,7 +16,8 @@ export function generatePasseComposeQuestion(
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Passé composé: ${aux.subject} / ${infinitive}`,
+    promptKey: "prompt.passeCompose",
+    promptParams: { subject: aux.subject, phrase: infinitive },
     french: infinitive,
     answers: [phrase],
     mode: "passe_compose",

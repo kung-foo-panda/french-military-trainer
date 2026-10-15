@@ -22,19 +22,19 @@ export function evaluatePasseCompose(
   const participleOk = user.endsWith(participle)
 
   if (auxiliaryOk && participleOk) {
-    return { correct: true, message: "Correct!", errorType: "correct" }
+    return { correct: true, messageKey: "eval.correct", errorType: "correct" }
   }
   if (!auxiliaryOk && participleOk) {
     return {
       correct: false,
-      message: "Wrong auxiliary",
+      messageKey: "eval.wrongAuxiliary",
       errorType: "auxiliary_error",
     }
   }
   if (auxiliaryOk && !participleOk) {
     return {
       correct: false,
-      message: "Wrong past participle",
+      messageKey: "eval.wrongParticiple",
       errorType: "participle_error",
     }
   }

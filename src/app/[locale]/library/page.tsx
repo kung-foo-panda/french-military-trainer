@@ -3,8 +3,12 @@ import { EXERCISE_TYPES } from "@/domain/exerciseType"
 import type { SourceKind } from "@/domain/provenance"
 import { Card } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
+import { getServerT } from "@/i18n/server"
+import { DEFAULT_LOCALE, isLocale } from "@/i18n"
 
-const EXERCISE_LABEL = new Map(EXERCISE_TYPES.map((t) => [t.id, t.label]))
+const EXERCISE_LABEL_KEY = new Map(
+  EXERCISE_TYPES.map((t) => [t.id, t.labelKey])
+)
 
 const SOURCE_TONE: Record<SourceKind, "neutral" | "accent" | "success"> = {
   pdf: "neutral",
@@ -36,15 +40,25 @@ for (const concept of catalog.concepts) {
 const orderedChapters = [...catalog.chapters].sort((a, b) => a.number - b.number)
 const trainableCount = catalog.concepts.filter((c) => c.trainable).length
 
-export default function LibraryPage() {
+export default async function LibraryPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const t = getServerT(isLocale(locale) ? locale : DEFAULT_LOCALE)
+
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Grammar Library</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {t("library.heading")}
+        </h1>
         <p className="text-sm text-ink-soft">
-          {trainableCount} concepts in the training rotation across{" "}
-          {orderedChapters.length} chapters. Concepts marked “Reference” are kept
-          for manual practice only.
+          {t("library.intro", {
+            trainable: trainableCount,
+            chapters: orderedChapters.length,
+          })}
         </p>
       </header>
 
@@ -57,7 +71,7 @@ export default function LibraryPage() {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-wide text-ink-faint">
-                  Chapter {chapter.number}
+                  {t("library.chapter", { number: chapter.number })}
                 </p>
                 <h2 className="text-lg font-medium text-ink">{chapter.title}</h2>
               </div>
@@ -68,7 +82,9 @@ export default function LibraryPage() {
 
             {rules.length > 0 && (
               <div className="space-y-1">
-                <h3 className="text-sm font-medium text-ink-soft">Rules</h3>
+                <h3 className="text-sm font-medium text-ink-soft">
+                  {t("library.rules")}
+                </h3>
                 <ul className="list-disc space-y-1 pl-5 text-sm text-ink-soft">
                   {rules.map((rule) => (
                     <li key={rule.id}>{rule.text}</li>
@@ -88,7 +104,9 @@ export default function LibraryPage() {
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="font-medium text-ink">{concept.name}</h3>
                       <Badge tone={concept.trainable ? "accent" : "neutral"}>
-                        {concept.trainable ? "In rotation" : "Reference"}
+                        {concept.trainable
+                          ? t("library.inRotation")
+                          : t("library.reference")}
                       </Badge>
                     </div>
                     <p className="mt-2 text-sm text-ink-soft">
@@ -97,14 +115,17 @@ export default function LibraryPage() {
 
                     {concept.exerciseTypes.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-1.5">
-                        {concept.exerciseTypes.map((type) => (
-                          <span
-                            key={type}
-                            className="rounded-full bg-surface px-2 py-0.5 text-xs text-ink-soft"
-                          >
-                            {EXERCISE_LABEL.get(type) ?? type}
-                          </span>
-                        ))}
+                        {concept.exerciseTypes.map((type) => {
+                          const labelKey = EXERCISE_LABEL_KEY.get(type)
+                          return (
+                            <span
+                              key={type}
+                              className="rounded-full bg-surface px-2 py-0.5 text-xs text-ink-soft"
+                            >
+                              {labelKey ? t(labelKey) : type}
+                            </span>
+                          )
+                        })}
                       </div>
                     )}
 
@@ -121,8 +142,15 @@ export default function LibraryPage() {
                     )}
 
                     <p className="mt-3 text-xs text-ink-faint">
-                      {concept.kind} · difficulty {concept.difficulty}
-                      {concept.runtime ? "" : " · encoded"}
+                      {(concept.runtime
+                        ? t("library.conceptMeta", {
+                            kind: concept.kind,
+                            difficulty: concept.difficulty,
+                          })
+                        : t("library.conceptMetaEncoded", {
+                            kind: concept.kind,
+                            difficulty: concept.difficulty,
+                          }))}
                     </p>
                   </div>
                 )

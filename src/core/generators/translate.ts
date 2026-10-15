@@ -9,7 +9,8 @@ export function generateTranslateQuestion(concept: TranslateConcept): Question {
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Translate "${example.french}"`,
+    promptKey: "prompt.translate",
+    promptParams: { phrase: example.french },
     french: example.french,
     answers: example.english,
     mode: "translate",

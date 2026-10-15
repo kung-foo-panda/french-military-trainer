@@ -17,7 +17,8 @@ import type { Question } from "../types/question"
  * clickable choices rendered as buttons in the UI.
  */
 export function generateDetectionQuestion(concept: DetectionConcept): Question {
-  let question: string
+  let promptKey: Question["promptKey"]
+  let promptParams: Question["promptParams"]
   let cue: string
   let answers: string[]
   let choices: string[]
@@ -25,7 +26,8 @@ export function generateDetectionQuestion(concept: DetectionConcept): Question {
   switch (concept.variant) {
     case "pronoun": {
       const subject = pick(NOUN_SUBJECTS)
-      question = `Replace "${subject.label}" with the correct pronoun`
+      promptKey = "prompt.replacePronoun"
+      promptParams = { phrase: subject.label }
       cue = subject.label
       answers = [subject.pronoun]
       choices = [...PRONOUN_CHOICES]
@@ -34,7 +36,8 @@ export function generateDetectionQuestion(concept: DetectionConcept): Question {
     case "person": {
       const pronouns = Object.keys(PERSON_INDEX) as Pronoun[]
       const pronoun = pick(pronouns)
-      question = `Which person slot is "${pronoun}"?`
+      promptKey = "prompt.personSlot"
+      promptParams = { phrase: pronoun }
       cue = pronoun
       answers = [PERSON_INDEX[pronoun]]
       choices = [...PERSON_CHOICES]
@@ -42,7 +45,8 @@ export function generateDetectionQuestion(concept: DetectionConcept): Question {
     }
     case "plural": {
       const subject = pick(NOUN_SUBJECTS)
-      question = `Is "${subject.label}" singular or plural?`
+      promptKey = "prompt.singularOrPlural"
+      promptParams = { phrase: subject.label }
       cue = subject.label
       answers = [subject.number]
       choices = [...NUMBER_CHOICES]
@@ -51,7 +55,8 @@ export function generateDetectionQuestion(concept: DetectionConcept): Question {
     case "gender": {
       const singular = NOUN_SUBJECTS.filter((s) => s.number === "singular")
       const subject = pick(singular)
-      question = `Is "${subject.label}" masculine or feminine?`
+      promptKey = "prompt.gender"
+      promptParams = { phrase: subject.label }
       cue = subject.label
       answers = [subject.gender]
       choices = [...GENDER_CHOICES]
@@ -62,7 +67,8 @@ export function generateDetectionQuestion(concept: DetectionConcept): Question {
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question,
+    promptKey,
+    promptParams,
     french: cue,
     answers,
     mode: "detect",

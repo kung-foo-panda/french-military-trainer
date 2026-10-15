@@ -5,7 +5,7 @@ import {
   dueConcepts,
   historySeries,
   masteryBand,
-  masteryLabel,
+  masteryLabelKey,
   summarizeMastery,
   weakConcepts,
   weakestFirst,
@@ -93,7 +93,7 @@ test("mastery bands hit their documented boundaries", () => {
   assert.equal(masteryBand(75), "solid")
   assert.equal(masteryBand(89), "solid")
   assert.equal(masteryBand(90), "mastered")
-  assert.equal(masteryLabel(100), "Mastered")
+  assert.equal(masteryLabelKey(100), "band.mastered")
 })
 
 test("bandDistribution skips empty bands and keeps best-first order", () => {

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>French Military Trainer</title>
+    <meta name="robots" content="noindex" />
+    <script>
+      // Phase i18n-2 — static-export entry. Firebase Hosting rewrites unknown
+      // paths here, so this picks a locale (saved choice → browser → default),
+      // maps legacy unprefixed routes onto it, and replaces the URL.
+      ;(function () {
+        var LOCALES = ["en", "pl", "de"]
+        var APP_ROUTES = ["train", "library", "progress", "settings", "dev"]
+        var DEFAULT = "en"
+        var pick = null
+        try {
+          pick = window.localStorage.getItem("fmt.locale")
+        } catch (e) {}
+        if (LOCALES.indexOf(pick) < 0) {
+          var nav =
+            (navigator.languages && navigator.languages[0]) ||
+            navigator.language ||
+            ""
+          var base = nav.toLowerCase().slice(0, 2)
+          pick = LOCALES.indexOf(base) >= 0 ? base : DEFAULT
+        }
+
+        var segments = location.pathname.split("/").filter(Boolean)
+        var first = segments[0]
+        var target
+        if (first && LOCALES.indexOf(first) >= 0) {
+          target = "/" + first
+        } else if (first && APP_ROUTES.indexOf(first) >= 0) {
+          target = "/" + pick + "/" + segments.join("/")
+        } else {
+          target = "/" + pick
+        }
+        location.replace(target + location.search + location.hash)
+      })()
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content="0; url=/en" />
+    </noscript>
+  </head>
+  <body></body>
+</html>

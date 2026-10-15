@@ -15,7 +15,7 @@ export function evaluateParticiple(
   if (user.startsWith(stem)) {
     return {
       correct: false,
-      message: "Wrong past participle",
+      messageKey: "eval.wrongParticiple",
       errorType: "participle_error",
     }
   }

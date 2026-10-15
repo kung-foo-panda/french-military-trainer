@@ -46,7 +46,8 @@ export function escalateQuestion(
     return {
       ...question,
       mode: "mixed_tense",
-      question: `Présent → passé composé: ${question.subject} + ${question.infinitive}`,
+      promptKey: "prompt.mixedTense",
+      promptParams: { subject: question.subject, phrase: question.infinitive ?? "" },
       answers: [`${aux.form} ${participle}`],
       auxiliary: aux.form,
       participle,
@@ -62,7 +63,8 @@ export function escalateQuestion(
     return {
       ...question,
       mode: "negation",
-      question: `${question.question} → négation`,
+      promptKey: "prompt.toNegation",
+      promptParams: { subject: question.subject, phrase: question.infinitive ?? "" },
       answers: [`${question.subject} n'${aux.verb} pas ${question.participle}`],
       auxiliary: aux.form,
     }

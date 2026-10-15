@@ -14,14 +14,17 @@ export function BarChart({
   max,
   height = 96,
   formatValue,
+  emptyLabel,
 }: {
   points: BarDatum[]
   max?: number
   height?: number
   formatValue?: (value: number) => string
+  /** Rendered when there are no points; pass `t("chart.noData")`. */
+  emptyLabel: string
 }) {
   if (points.length === 0) {
-    return <p className="text-sm text-ink-soft">No data yet.</p>
+    return <p className="text-sm text-ink-soft">{emptyLabel}</p>
   }
 
   const safeMax = max ?? Math.max(1, ...points.map((p) => p.value))

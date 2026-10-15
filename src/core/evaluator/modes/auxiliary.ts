@@ -46,7 +46,7 @@ export function evaluateAuxiliary(
 
   return {
     correct: false,
-    message: "Wrong auxiliary",
+    messageKey: "eval.wrongAuxiliary",
     errorType: "auxiliary_error",
   }
 }

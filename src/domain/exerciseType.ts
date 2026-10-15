@@ -1,3 +1,4 @@
+import type { MessageKey } from "../i18n"
 import type { Concept } from "../types/concept"
 import type { QuestionMode } from "../types/question"
 
@@ -22,49 +23,70 @@ export type ExerciseTypeId =
 
 export type ExerciseType = {
   id: ExerciseTypeId
-  label: string
+  /** Catalogue key; the UI renders it with `t()`. */
+  labelKey: MessageKey
   modes: QuestionMode[]
 }
 
 export const EXERCISE_TYPES: ExerciseType[] = [
-  { id: "translate_phrase", label: "Translate a phrase", modes: ["translate"] },
+  {
+    id: "translate_phrase",
+    labelKey: "exercise.translate_phrase",
+    modes: ["translate"],
+  },
   {
     id: "recognize_subject",
-    label: "Recognize the subject pronoun",
+    labelKey: "exercise.recognize_subject",
     modes: ["detect"],
   },
-  { id: "classify_person", label: "Classify grammatical person", modes: ["detect"] },
-  { id: "classify_number", label: "Classify singular vs plural", modes: ["detect"] },
-  { id: "classify_gender", label: "Classify noun gender", modes: ["detect"] },
+  {
+    id: "classify_person",
+    labelKey: "exercise.classify_person",
+    modes: ["detect"],
+  },
+  {
+    id: "classify_number",
+    labelKey: "exercise.classify_number",
+    modes: ["detect"],
+  },
+  {
+    id: "classify_gender",
+    labelKey: "exercise.classify_gender",
+    modes: ["detect"],
+  },
   {
     id: "conjugate_present",
-    label: "Conjugate in the present",
+    labelKey: "exercise.conjugate_present",
     modes: ["conjugate", "mixed_tense"],
   },
   {
     id: "form_participle",
-    label: "Form the past participle",
+    labelKey: "exercise.form_participle",
     modes: ["participle"],
   },
   {
     id: "build_passe_compose",
-    label: "Build the passé composé",
+    labelKey: "exercise.build_passe_compose",
     modes: ["passe_compose"],
   },
   {
     id: "negate_passe_compose",
-    label: "Negate the passé composé",
+    labelKey: "exercise.negate_passe_compose",
     modes: ["negation"],
   },
-  { id: "choose_auxiliary", label: "Choose the auxiliary", modes: ["auxiliary"] },
+  {
+    id: "choose_auxiliary",
+    labelKey: "exercise.choose_auxiliary",
+    modes: ["auxiliary"],
+  },
   {
     id: "apply_agreement",
-    label: "Apply être agreement",
+    labelKey: "exercise.apply_agreement",
     modes: ["etre_pc"],
   },
   {
     id: "express_near_future",
-    label: "Express the near future",
+    labelKey: "exercise.express_near_future",
     modes: ["futur_proche"],
   },
 ]

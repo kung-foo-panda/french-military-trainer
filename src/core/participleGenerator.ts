@@ -25,7 +25,8 @@ export function generateParticipleQuestion(
   return {
     conceptId: concept.id,
     concept: concept.name,
-    question: `Past participle: ${infinitive}`,
+    promptKey: "prompt.participle",
+    promptParams: { phrase: infinitive },
     french: infinitive,
     answers: [participle],
     mode: "participle",

@@ -1,3 +1,4 @@
+import type { MessageKey } from "../../i18n"
 import type { Question } from "../../types/question"
 
 export type ErrorType =
@@ -12,7 +13,8 @@ export type ErrorType =
 
 export type EvaluationResult = {
   correct: boolean
-  message: string
+  /** Catalogue key; the UI renders it with `t()` so feedback is locale-bound. */
+  messageKey: MessageKey
   errorType: ErrorType
 }
 

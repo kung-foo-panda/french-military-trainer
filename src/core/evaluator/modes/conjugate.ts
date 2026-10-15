@@ -34,7 +34,7 @@ export function evaluateConjugate(
     if (userEnding !== meta.expectedEnding) {
       return {
         correct: false,
-        message: "Not correct",
+        messageKey: "eval.wrongAnswer",
         errorType: "ending_error",
       }
     }
@@ -43,7 +43,7 @@ export function evaluateConjugate(
   if (!userVerb.startsWith(expectedStem)) {
     return {
       correct: false,
-      message: "Not correct",
+      messageKey: "eval.wrongAnswer",
       errorType: "stem_error",
     }
   }

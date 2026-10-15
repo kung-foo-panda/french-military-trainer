@@ -46,6 +46,8 @@ import { Button } from "@/components/ui/Button"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Stat } from "@/components/ui/Stat"
 import { TrainingPlanPicker } from "@/components/TrainingPlanPicker"
+import { useT } from "@/i18n/LocaleProvider"
+import type { MessageKey } from "@/i18n"
 
 type ConceptStat = { name: string; correct: number; total: number }
 
@@ -75,14 +77,14 @@ function bootstrap() {
   }
 }
 
-const PLACEHOLDERS: Partial<Record<Question["mode"], string>> = {
-  conjugate: "e.g. je parle",
-  participle: "e.g. parlé",
-  passe_compose: "e.g. nous avons parlé",
-  mixed_tense: "e.g. nous avons parlé",
-  negation: "e.g. nous n'avons pas parlé",
-  etre_pc: "e.g. elle est allée",
-  futur_proche: "e.g. je vais parler",
+const PLACEHOLDER_KEYS: Partial<Record<Question["mode"], MessageKey>> = {
+  conjugate: "placeholder.conjugate",
+  participle: "placeholder.participle",
+  passe_compose: "placeholder.passe_compose",
+  mixed_tense: "placeholder.mixed_tense",
+  negation: "placeholder.negation",
+  etre_pc: "placeholder.etre_pc",
+  futur_proche: "placeholder.futur_proche",
 }
 
 export default function TrainPage() {
@@ -106,6 +108,7 @@ export default function TrainPage() {
   const [liveNow, setLiveNow] = useState(() => Date.now())
   const inputRef = useRef<HTMLInputElement>(null)
   const questionShownAtRef = useRef(0)
+  const t = useT()
 
   useEffect(() => {
     if (session.finished) return
@@ -121,6 +124,7 @@ export default function TrainPage() {
   }, [question, session.finished])
 
   const concept = concepts.find((c) => c.id === question.conceptId) ?? null
+  const placeholderKey = PLACEHOLDER_KEYS[question.mode]
 
   const statEntries = Object.entries(conceptStats)
   const weakestToday = statEntries
@@ -189,13 +193,18 @@ export default function TrainPage() {
     setLastCorrect(result.correct)
     setFeedback(
       result.correct
-        ? result.message
-        : `${result.message} — expected: ${question.answers[0]}`
+        ? t(result.messageKey)
+        : t("train.feedback.expected", {
+            message: t(result.messageKey),
+            answer: question.answers[0],
+          })
     )
 
     const explainTarget =
       question.mode === "translate" ? question.french : question.answers[0]
-    setExplanation(question.choices ? [] : explainPhrase(explainTarget))
+    setExplanation(
+      question.choices ? [] : explainPhrase(explainTarget, t)
+    )
 
     const idx = states.findIndex((s) => s.id === question.conceptId)
     const existing =
@@ -294,21 +303,23 @@ export default function TrainPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Train</h1>
-          <p className="mt-1 text-sm text-ink-soft">
-            Answer each drill — wrong or slow items return sooner.
-          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {t("train.heading")}
+          </h1>
+          <p className="mt-1 text-sm text-ink-soft">{t("train.subtitle")}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Badge tone="accent">Streak {enforcement.streakDays}</Badge>
+          <Badge tone="accent">
+            {t("train.streak", { days: enforcement.streakDays })}
+          </Badge>
           {enforcement.skipDebt && (
-            <Badge tone="warn">Today’s target raised to 40</Badge>
+            <Badge tone="warn">{t("train.targetRaised")}</Badge>
           )}
           {weakness && !session.finished && (
-            <Badge tone="neutral">Weakness focus</Badge>
+            <Badge tone="neutral">{t("train.weaknessFocus")}</Badge>
           )}
           {lastReinsert && !session.finished && (
-            <Badge tone="neutral">Reinforced</Badge>
+            <Badge tone="neutral">{t("train.reinforced")}</Badge>
           )}
         </div>
       </header>
@@ -321,18 +332,18 @@ export default function TrainPage() {
         <ProgressBar
           value={enforcement.completedToday}
           max={enforcement.targetToday}
-          label="Today’s plan"
+          label={t("train.todayPlan")}
         />
       </Card>
 
       <div className="grid gap-3 sm:grid-cols-3">
         <Stat
-          label="Session"
+          label={t("train.stat.session")}
           value={`${session.completed}/${session.targetLength}`}
         />
-        <Stat label="Elapsed" value={`${elapsedSeconds}s`} />
+        <Stat label={t("train.stat.elapsed")} value={`${elapsedSeconds}s`} />
         <Stat
-          label="Avg / answer"
+          label={t("train.stat.avg")}
           value={
             session.completed > 0
               ? `${(session.totalTimeMs / session.completed / 1000).toFixed(1)}s`
@@ -343,19 +354,23 @@ export default function TrainPage() {
 
       {stressReport.sessionCount > 0 && (
         <p className="text-xs text-ink-faint">
-          Today: {stressReport.sessionCount} session(s),{" "}
-          {stressReport.answers} answers,{" "}
-          {(stressReport.accuracy * 100).toFixed(0)}% acc, avg{" "}
-          {(stressReport.avgAnswerMs / 1000).toFixed(1)}s
+          {t("train.stress.summary", {
+            sessions: stressReport.sessionCount,
+            answers: stressReport.answers,
+            acc: (stressReport.accuracy * 100).toFixed(0),
+            avg: (stressReport.avgAnswerMs / 1000).toFixed(1),
+          })}
           {stressReport.sessionCount >= 2
-            ? ` — decay ${(stressReport.degradation * 100).toFixed(0)}%, slowdown ${(
-                stressReport.slowdownMs / 1000
-              ).toFixed(1)}s`
+            ? t("train.stress.decay", {
+                pct: (stressReport.degradation * 100).toFixed(0),
+                slow: (stressReport.slowdownMs / 1000).toFixed(1),
+              })
             : ""}
           {stressReport.weakestConcept
-            ? ` — weakest: ${stressReport.weakestConcept.name} (${(
-                stressReport.weakestConcept.accuracy * 100
-              ).toFixed(0)}%)`
+            ? t("train.stress.weakest", {
+                name: stressReport.weakestConcept.name,
+                pct: (stressReport.weakestConcept.accuracy * 100).toFixed(0),
+              })
             : ""}
         </p>
       )}
@@ -364,22 +379,22 @@ export default function TrainPage() {
         <Card className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-medium uppercase tracking-wide text-ink-faint">
-              {concept ? concept.name : "Practice"}
+              {concept ? concept.name : t("train.practice")}
             </span>
             {question.mode === "detect" && (
-              <Badge tone="neutral">Recognition</Badge>
+              <Badge tone="neutral">{t("train.recognition")}</Badge>
             )}
           </div>
 
           <div className="space-y-2">
             <h2 className="text-xl font-semibold text-ink">
-              {question.question}
+              {t(question.promptKey, question.promptParams)}
             </h2>
             {question.mode === "translate" ? (
               <p className="text-lg text-ink-soft">{question.french}</p>
             ) : !question.choices ? (
               <p className="text-sm text-ink-soft">
-                Infinitive:{" "}
+                {t("train.infinitive")}{" "}
                 <span className="font-medium text-ink">
                   {question.french}
                 </span>
@@ -412,10 +427,12 @@ export default function TrainPage() {
                 autoFocus
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                placeholder={PLACEHOLDERS[question.mode] ?? "Your answer"}
+                placeholder={
+                  placeholderKey ? t(placeholderKey) : t("placeholder.default")
+                }
                 className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit">{t("train.submit")}</Button>
             </form>
           )}
 
@@ -451,39 +468,43 @@ export default function TrainPage() {
       {session.finished && (
         <Card className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold">Session report</h2>
-            <Badge tone="success">Complete</Badge>
+            <h2 className="text-lg font-semibold">{t("train.report.title")}</h2>
+            <Badge tone="success">{t("train.report.complete")}</Badge>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
             <Stat
-              label="Score"
+              label={t("train.report.score")}
               value={`${session.correct}/${session.correct + session.incorrect}`}
-              hint={`${accuracyPct}% correct`}
+              hint={t("train.report.correctPct", { pct: accuracyPct })}
             />
             <Stat
-              label="Avg / answer"
+              label={t("train.report.avg")}
               value={`${(
                 session.totalTimeMs /
                 Math.max(1, session.completed) /
                 1000
               ).toFixed(1)}s`}
             />
-            <Stat label="Duration" value={`${elapsedSeconds}s`} />
+            <Stat
+              label={t("train.report.duration")}
+              value={`${elapsedSeconds}s`}
+            />
           </div>
 
           {weakestToday && (
             <p className="text-sm text-ink-soft">
-              Weakest today:{" "}
-              <span className="font-medium text-ink">{weakestToday.name}</span> (
-              {(weakestToday.accuracy * 100).toFixed(0)}% over{" "}
-              {weakestToday.total})
+              {t("train.report.weakestToday", {
+                name: weakestToday.name,
+                pct: (weakestToday.accuracy * 100).toFixed(0),
+                total: weakestToday.total,
+              })}
             </p>
           )}
 
           <div>
             <h3 className="mb-2 text-sm font-medium text-ink-soft">
-              By concept
+              {t("train.report.byConcept")}
             </h3>
             <ul className="divide-y divide-border">
               {statEntries.map(([id, s]) => (
@@ -507,7 +528,9 @@ export default function TrainPage() {
             </p>
           )}
 
-          <Button onClick={() => startNewSession()}>Start new session</Button>
+          <Button onClick={() => startNewSession()}>
+            {t("train.report.startNew")}
+          </Button>
         </Card>
       )}
     </div>

@@ -13,7 +13,7 @@ import {
   dueConcepts,
   historySeries,
   masteryBand,
-  masteryLabel,
+  masteryLabelKey,
   summarizeMastery,
   weakConcepts,
   weakestFirst,
@@ -25,6 +25,8 @@ import { buttonClass } from "@/components/ui/Button"
 import { ProgressBar } from "@/components/ui/ProgressBar"
 import { Stat } from "@/components/ui/Stat"
 import { BarChart } from "@/components/ui/BarChart"
+import { useLocale, useT } from "@/i18n/LocaleProvider"
+import { localePath } from "@/i18n"
 
 const CONCEPT_BY_ID = new Map(concepts.map((c) => [c.id, c]))
 const CHAPTER_BY_ID = new Map(chapters.map((c) => [c.id, c]))
@@ -65,57 +67,72 @@ export default function ProgressPage() {
   const [view] = useState(build)
   const { enforcement, series, summary, bands, due, weak, ranked } = view
   const hasPractice = series.length > 0
+  const locale = useLocale()
+  const t = useT()
 
   return (
     <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Progress</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {t("progress.heading")}
+          </h1>
           <p className="mt-1 text-sm text-ink-soft">
-            Mastery across the training pool, plus your practice history.
+            {t("progress.subtitle")}
           </p>
         </div>
-        <Link href="/train" className={buttonClass("primary")}>
-          Train now
+        <Link
+          href={localePath(locale, "/train")}
+          className={buttonClass("primary")}
+        >
+          {t("progress.trainNow")}
         </Link>
       </header>
 
       <div className="grid gap-3 sm:grid-cols-4">
         <Stat
-          label="Mastered"
+          label={t("progress.stat.mastered")}
           value={`${summary.mastered}/${summary.total}`}
-          hint="High strength, stable recall"
+          hint={t("progress.stat.masteredHint")}
         />
         <Stat
-          label="Weak"
+          label={t("progress.stat.weak")}
           value={summary.weak}
-          hint="Below the review threshold"
+          hint={t("progress.stat.weakHint")}
         />
-        <Stat label="Due today" value={summary.dueToday} hint="Scheduled reviews" />
         <Stat
-          label="Avg strength"
+          label={t("progress.stat.dueToday")}
+          value={summary.dueToday}
+          hint={t("progress.stat.dueTodayHint")}
+        />
+        <Stat
+          label={t("progress.stat.avgStrength")}
           value={`${summary.avgStrength.toFixed(0)}%`}
-          hint={`Streak ${enforcement.streakDays} day(s)`}
+          hint={t("progress.stat.avgStrengthHint", {
+            days: enforcement.streakDays,
+          })}
         />
       </div>
 
       <Card className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-medium">Today’s plan</h2>
-          {enforcement.skipDebt && <Badge tone="warn">Raised to 40</Badge>}
+          <h2 className="font-medium">{t("progress.todayPlan")}</h2>
+          {enforcement.skipDebt && (
+            <Badge tone="warn">{t("progress.raised")}</Badge>
+          )}
         </div>
         <ProgressBar
           value={enforcement.completedToday}
           max={enforcement.targetToday}
-          label="Completed"
+          label={t("progress.completed")}
         />
       </Card>
 
       <Card className="space-y-4">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="font-medium">Mastery distribution</h2>
+          <h2 className="font-medium">{t("progress.masteryDistribution")}</h2>
           <span className="text-xs text-ink-faint">
-            {summary.total} concepts
+            {t("progress.conceptsCount", { count: summary.total })}
           </span>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -125,7 +142,7 @@ export default function ProgressPage() {
               className="inline-flex items-center gap-2 rounded-full bg-surface-2 px-3 py-1 text-xs text-ink-soft"
             >
               <span className="h-2 w-2 rounded-full bg-accent" />
-              {band.label}
+              {t(band.labelKey)}
               <span className="font-semibold text-ink">{band.count}</span>
             </span>
           ))}
@@ -134,27 +151,28 @@ export default function ProgressPage() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="space-y-3">
-          <h2 className="font-medium">Accuracy — last 14 days</h2>
+          <h2 className="font-medium">{t("progress.accuracy14")}</h2>
           {hasPractice ? (
             <BarChart
               points={series.map((p) => ({
                 label: shortDate(p.date),
                 value: p.accuracy,
-                hint: `${p.correct}/${p.answers} correct`,
+                hint: t("progress.correctHint", {
+                  correct: p.correct,
+                  answers: p.answers,
+                }),
               }))}
               max={1}
               formatValue={(v) => `${(v * 100).toFixed(0)}%`}
+              emptyLabel={t("chart.noData")}
             />
           ) : (
-            <p className="text-sm text-ink-soft">
-              No sessions recorded yet — your accuracy trend appears after your
-              first session.
-            </p>
+            <p className="text-sm text-ink-soft">{t("progress.noSessions")}</p>
           )}
         </Card>
 
         <Card className="space-y-3">
-          <h2 className="font-medium">Avg time per answer (s)</h2>
+          <h2 className="font-medium">{t("progress.avgTime")}</h2>
           {hasPractice ? (
             <BarChart
               points={series.map((p) => ({
@@ -162,11 +180,10 @@ export default function ProgressPage() {
                 value: p.avgAnswerMs / 1000,
               }))}
               formatValue={(v) => `${v.toFixed(1)}s`}
+              emptyLabel={t("chart.noData")}
             />
           ) : (
-            <p className="text-sm text-ink-soft">
-              Answer timing appears once you have practiced.
-            </p>
+            <p className="text-sm text-ink-soft">{t("progress.noTiming")}</p>
           )}
         </Card>
       </div>
@@ -174,7 +191,7 @@ export default function ProgressPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="font-medium">Weak concepts</h2>
+            <h2 className="font-medium">{t("progress.weakConcepts")}</h2>
             <Badge tone={weak.length > 0 ? "warn" : "success"}>
               {weak.length}
             </Badge>
@@ -199,15 +216,13 @@ export default function ProgressPage() {
               })}
             </ul>
           ) : (
-            <p className="text-sm text-ink-soft">
-              Nothing below the threshold — nice work.
-            </p>
+            <p className="text-sm text-ink-soft">{t("progress.nothingWeak")}</p>
           )}
         </Card>
 
         <Card className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="font-medium">Due for review</h2>
+            <h2 className="font-medium">{t("progress.dueForReview")}</h2>
             <Badge tone={due.length > 0 ? "accent" : "success"}>
               {due.length}
             </Badge>
@@ -233,24 +248,36 @@ export default function ProgressPage() {
             </ul>
           ) : (
             <p className="text-sm text-ink-soft">
-              Everything is scheduled for later.
+              {t("progress.everythingScheduled")}
             </p>
           )}
         </Card>
       </div>
 
       <Card className="space-y-4">
-        <h2 className="font-medium">By concept</h2>
+        <h2 className="font-medium">{t("progress.byConcept")}</h2>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wide text-ink-faint">
-                <th className="py-2 pr-3 font-medium">Concept</th>
-                <th className="py-2 pr-3 font-medium">Chapter</th>
-                <th className="py-2 pr-3 font-medium">Level</th>
-                <th className="py-2 pr-3 font-medium">Strength</th>
-                <th className="py-2 pr-3 font-medium">Stability</th>
-                <th className="py-2 font-medium">Failures</th>
+                <th className="py-2 pr-3 font-medium">
+                  {t("progress.table.concept")}
+                </th>
+                <th className="py-2 pr-3 font-medium">
+                  {t("progress.table.chapter")}
+                </th>
+                <th className="py-2 pr-3 font-medium">
+                  {t("progress.table.level")}
+                </th>
+                <th className="py-2 pr-3 font-medium">
+                  {t("progress.table.strength")}
+                </th>
+                <th className="py-2 pr-3 font-medium">
+                  {t("progress.table.stability")}
+                </th>
+                <th className="py-2 font-medium">
+                  {t("progress.table.failures")}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -269,7 +296,7 @@ export default function ProgressPage() {
                     </td>
                     <td className="py-2 pr-3">
                       <Badge tone={BAND_TONE[masteryBand(state.strength)]}>
-                        {masteryLabel(state.strength)}
+                        {t(masteryLabelKey(state.strength))}
                       </Badge>
                     </td>
                     <td className="py-2 pr-3 text-ink-soft">
